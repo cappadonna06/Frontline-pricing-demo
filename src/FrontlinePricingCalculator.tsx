@@ -1013,7 +1013,7 @@ function AdderBlock({
   );
 
   // ⬇️ same grid template for header + rows
-  const GRID = "grid grid-cols-[70px,180px,110px] gap-2";
+  const GRID = "grid grid-cols-[70px,70px,110px] gap-2";
 
   const tableHeader = (
     <div className={`${GRID} text-xs font-medium text-muted-foreground`}>
