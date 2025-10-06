@@ -102,20 +102,29 @@ export default function FrontlinePricingCalculator() {
   const [adderGM, setAdderGM] = useState<number>(0.5); // 50%
 
   // Adder COSTs by size (editable). These are internal costs, not prices.
-  // Foam uses S/M/L/XL (common). Booster & Pool have separate cost classes for MP3 and LV2.
-  const [adderCost, setAdderCost] = useState({
-    foam: { S: 700, M: 1000, L: 1400, XL: 1800 },
-    booster: {
-      MP3: { S: 1100, M: 1650, L: 2300 },
-      LV2: { S: 1400, M: 2100, L: 2900 },
-    },
-    pool: {
-      MP3: { S: 450, M: 750, L: 1050 },
-      LV2: { S: 600, M: 900, L: 1200 },
-    },
-    solar: { flat: 700 },
-    ups: { flat: 250 },
-  });
+
+const [adderCost, setAdderCost] = useState({
+  // Foam (same cost for MP3/LV2; XL assumed = L * 1.2 by default)
+  foam: { S: 2568, M: 2568, L: 3749, XL: Math.round(3749 * 1.20) },
+
+  // Booster: MP3
+  booster: {
+    MP3: { S: 1000, M: 1000, L: 1750 },
+    // Booster: LV2
+    LV2: { S: 2500, M: 3000, L: 3500 },
+  },
+
+  // Pool: MP3 and LV2
+  pool: {
+    MP3: { S: 2832.74, M: 2832.74, L: 2832.74 },
+    LV2: { S: 5000, M: 6000, L: 7000 },
+  },
+
+  // Flat costs
+  solar: { flat: 511.95 },
+  ups: { flat: 900 },
+});
+
 
   // ASE adder increments — STATE (editable via table)
   const [ASE_ADDERS, setASE_ADDERS] = useState(initialASEAdders);
@@ -616,63 +625,284 @@ export default function FrontlinePricingCalculator() {
       </Card>
 
       {/* Default Adder Costs Matrix (bi‑directional) */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Default Adder Costs (edit to update all pricing)</CardTitle>
-        </CardHeader>
-        <CardContent className="overflow-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="text-left text-muted-foreground">
-                <th className="py-2">Adder</th>
-                <th className="py-2">Class / Size</th>
-                <th className="py-2">Cost</th>
-              </tr>
-            </thead>
-            <tbody className="align-top">
-              {/* Foam rows */}
-              {["S","M","L","XL"].map((k) => (
-                <tr key={`foam-${k}`}>
-                  <td className="py-2 font-medium">Foam</td>
-                  <td className="py-2 pr-2">{k}</td>
-                  <td className="py-2 pr-2"><Input type="number" value={(adderCost.foam as any)[k]} onChange={(e) => setAdderCost((s:any) => ({ ...s, foam: { ...s.foam, [k]: Number(e.target.value || 0) } }))} /></td>
-                </tr>
-              ))}
+     <Card>
+  <CardHeader>
+    <CardTitle>Default Adder Costs (COGS) — matrix editor</CardTitle>
+    <p className="text-xs text-muted-foreground">
+      Edit costs here. All adder prices above update immediately using the current Adder GM.
+    </p>
+  </CardHeader>
 
-              {/* Booster rows — MP3 & LV2 classes */}
-              {["MP3","LV2"].flatMap((cls) => (["S","M","L"]).map((k) => (
-                <tr key={`booster-${cls}-${k}`}>
-                  <td className="py-2 font-medium">Booster</td>
-                  <td className="py-2 pr-2">{cls} {k}</td>
-                  <td className="py-2 pr-2"><Input type="number" value={(adderCost.booster as any)[cls][k]} onChange={(e) => setAdderCost((s:any) => ({ ...s, booster: { ...s.booster, [cls]: { ...(s.booster as any)[cls], [k]: Number(e.target.value || 0) } } }))} /></td>
-                </tr>
-              )))}
+  <CardContent className="overflow-auto">
+    <table className="w-full text-sm">
+      <thead>
+        <tr className="text-left text-muted-foreground">
+          <th className="py-2">Option / Configuration</th>
+          <th className="py-2 text-right">Config 3 Zone (S)</th>
+          <th className="py-2 text-right">Config 6 Zone (M)</th>
+          <th className="py-2 text-right">Config 9 Zone (L)</th>
+          <th className="py-2 pl-2">Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        {/* SECTION: MP3 Options */}
+        <tr>
+          <td colSpan={5} className="pt-4 pb-2 text-xs uppercase tracking-wide text-muted-foreground">
+            <span className="font-semibold">MP3 Options (Base Reference)</span>
+          </td>
+        </tr>
 
-              {/* Pool/Draft rows — MP3 & LV2 classes */}
-              {["MP3","LV2"].flatMap((cls) => (["S","M","L"]).map((k) => (
-                <tr key={`pool-${cls}-${k}`}>
-                  <td className="py-2 font-medium">Pool/Draft</td>
-                  <td className="py-2 pr-2">{cls} {k}</td>
-                  <td className="py-2 pr-2"><Input type="number" value={(adderCost.pool as any)[cls][k]} onChange={(e) => setAdderCost((s:any) => ({ ...s, pool: { ...s.pool, [cls]: { ...(s.pool as any)[cls], [k]: Number(e.target.value || 0) } } }))} /></td>
-                </tr>
-              )))}
+        {/* Booster Pump — MP3 */}
+        <tr className="align-middle">
+          <td className="py-2 font-medium">Booster Pump</td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.booster.MP3.S}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, booster: { ...s.booster, MP3: { ...s.booster.MP3, S: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.booster.MP3.M}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, booster: { ...s.booster, MP3: { ...s.booster.MP3, M: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.booster.MP3.L}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, booster: { ...s.booster, MP3: { ...s.booster.MP3, L: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2 pl-2 text-xs text-muted-foreground">
+            Standard boost pump for multi-zone MP3; cost rises with longer runs / wiring
+          </td>
+        </tr>
 
-              {/* Solar & UPS */}
-              <tr>
-                <td className="py-2 font-medium">Solar (flat)</td>
-                <td className="py-2 pr-2">—</td>
-                <td className="py-2 pr-2"><Input type="number" value={adderCost.solar.flat} onChange={(e) => setAdderCost((s:any) => ({ ...s, solar: { flat: Number(e.target.value || 0) } }))} /></td>
-              </tr>
-              <tr>
-                <td className="py-2 font-medium">UPS (flat)</td>
-                <td className="py-2 pr-2">—</td>
-                <td className="py-2 pr-2"><Input type="number" value={adderCost.ups.flat} onChange={(e) => setAdderCost((s:any) => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))} /></td>
-              </tr>
-            </tbody>
-          </table>
-          <p className="text-xs text-muted-foreground mt-2">Changes here immediately update all adder pricing above (bi‑directional with the adder cards).</p>
-        </CardContent>
-      </Card>
+        {/* Foam — MP3/LV2 (common) includes XL row */}
+        <tr className="align-top">
+          <td className="py-2 font-medium">Foam</td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.foam.S}
+              onChange={(e) => setAdderCost(s => ({ ...s, foam: { ...s.foam, S: Number(e.target.value || 0) } }))}
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.foam.M}
+              onChange={(e) => setAdderCost(s => ({ ...s, foam: { ...s.foam, M: Number(e.target.value || 0) } }))}
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.foam.L}
+              onChange={(e) => setAdderCost(s => ({ ...s, foam: { ...s.foam, L: Number(e.target.value || 0) } }))}
+            />
+          </td>
+          <td className="py-2 pl-2 text-xs text-muted-foreground">
+            Scales with zone count and chemical usage
+            <div className="mt-1">
+              <span className="text-[11px] text-muted-foreground">XL</span>
+              <Input
+                className="mt-1 max-w-[140px] text-right"
+                type="number"
+                value={adderCost.foam.XL}
+                onChange={(e) => setAdderCost(s => ({ ...s, foam: { ...s.foam, XL: Number(e.target.value || 0) } }))}
+              />
+            </div>
+          </td>
+        </tr>
+
+        {/* Solar — flat (replicate across columns for clarity) */}
+        <tr className="align-middle">
+          <td className="py-2 font-medium">Solar</td>
+          {["S","M","L"].map((col) => (
+            <td key={`solar-${col}`} className="py-2">
+              <Input
+                className="text-right"
+                type="number"
+                value={adderCost.solar.flat}
+                onChange={(e) => setAdderCost(s => ({ ...s, solar: { flat: Number(e.target.value || 0) } }))}
+              />
+            </td>
+          ))}
+          <td className="py-2 pl-2 text-xs text-muted-foreground">
+            Constant — only controller integration cost
+          </td>
+        </tr>
+
+        {/* Pool — MP3 */}
+        <tr className="align-middle">
+          <td className="py-2 font-medium">Pool</td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.pool.MP3.S}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, pool: { ...s.pool, MP3: { ...s.pool.MP3, S: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.pool.MP3.M}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, pool: { ...s.pool, MP3: { ...s.pool.MP3, M: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.pool.MP3.L}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, pool: { ...s.pool, MP3: { ...s.pool.MP3, L: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2 pl-2 text-xs text-muted-foreground">
+            Standard pool integration and Smart Switch kit
+          </td>
+        </tr>
+
+        {/* SECTION: LV2 Options */}
+        <tr>
+          <td colSpan={5} className="pt-5 pb-2 text-xs uppercase tracking-wide text-muted-foreground">
+            <span className="font-semibold">LV2 Options (High-Flow Tier)</span>
+          </td>
+        </tr>
+
+        {/* Booster Pump — LV2 */}
+        <tr className="align-middle">
+          <td className="py-2 font-medium">Booster Pump (LV2)</td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.booster.LV2.S}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, booster: { ...s.booster, LV2: { ...s.booster.LV2, S: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.booster.LV2.M}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, booster: { ...s.booster, LV2: { ...s.booster.LV2, M: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.booster.LV2.L}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, booster: { ...s.booster, LV2: { ...s.booster.LV2, L: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2 pl-2 text-xs text-muted-foreground">
+            Larger stainless components; high-flow pump; increased wiring & integration
+          </td>
+        </tr>
+
+        {/* Pool — LV2 */}
+        <tr className="align-middle">
+          <td className="py-2 font-medium">Pool (LV2)</td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.pool.LV2.S}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, pool: { ...s.pool, LV2: { ...s.pool.LV2, S: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.pool.LV2.M}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, pool: { ...s.pool, LV2: { ...s.pool.LV2, M: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2">
+            <Input
+              className="text-right"
+              type="number"
+              value={adderCost.pool.LV2.L}
+              onChange={(e) =>
+                setAdderCost(s => ({ ...s, pool: { ...s.pool, LV2: { ...s.pool.LV2, L: Number(e.target.value || 0) } } }))
+              }
+            />
+          </td>
+          <td className="py-2 pl-2 text-xs text-muted-foreground">
+            Doubled cost vs booster — 2″ plumbing, manifold changes, higher labor
+          </td>
+        </tr>
+
+        {/* SECTION: Optional Accessories */}
+        <tr>
+          <td colSpan={5} className="pt-5 pb-2 text-xs uppercase tracking-wide text-muted-foreground">
+            <span className="font-semibold">Optional Accessories</span>
+          </td>
+        </tr>
+
+        {/* Large UPS — flat */}
+        <tr className="align-middle">
+          <td className="py-2 font-medium">Large UPS</td>
+          {["S","M","L"].map((col) => (
+            <td key={`ups-${col}`} className="py-2">
+              <Input
+                className="text-right"
+                type="number"
+                value={adderCost.ups.flat}
+                onChange={(e) => setAdderCost(s => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))}
+              />
+            </td>
+          ))}
+          <td className="py-2 pl-2 text-xs text-muted-foreground">
+            Extended runtime for controller & comms (MP3 &amp; LV2 compatible)
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p className="text-xs text-muted-foreground mt-3">
+      Tip: edit values directly; Foam XL can be tuned independently.
+    </p>
+  </CardContent>
+</Card>
+
 
       {/* Service Adders (ASE) Table */}
       <Card>
