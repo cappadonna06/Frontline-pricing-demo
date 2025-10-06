@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Slider } from "@/components/ui/slider";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -459,7 +459,10 @@ export default function FrontlinePricingCalculator() {
                   <div className="font-medium">Solar Backup</div>
                   <div className="text-xs text-muted-foreground">{ADDER_NOTES.solar}</div>
                 </div>
-                <Switch checked={includeSolar} onCheckedChange={setIncludeSolar} />
+                <Checkbox checked={includeSolar} onCheckedChange={setIncludeSolar} aria-label="Include Solar Backup" />
+
+
+
               </div>
               <div className="space-y-2">
                 <div className="grid grid-cols-2 gap-2 text-xs font-medium text-muted-foreground">
@@ -481,7 +484,7 @@ export default function FrontlinePricingCalculator() {
                   <div className="font-medium">UPS (8‑Day)</div>
                   <div className="text-xs text-muted-foreground">{ADDER_NOTES.ups}</div>
                 </div>
-                <Switch checked={includeUPS} onCheckedChange={setIncludeUPS} />
+                <Checkbox checked={includeUPS} onCheckedChange={setIncludeUPS} aria-label="Include UPS (8-Day)" />
               </div>
               <div className="space-y-2">
                 <div className="grid grid-cols-2 gap-2 text-xs font-medium text-muted-foreground">
@@ -815,7 +818,8 @@ function AdderBlock({
         <div className="font-medium">{title}</div>
         <div className="text-xs text-muted-foreground">{note}</div>
       </div>
-      <Switch checked={enabled} onCheckedChange={onToggle} />
+ <Checkbox checked={enabled} onCheckedChange={onToggle} aria-label={`Include ${title}`} />
+
     </div>
   );
 
