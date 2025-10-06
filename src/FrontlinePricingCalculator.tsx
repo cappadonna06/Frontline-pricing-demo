@@ -356,9 +356,8 @@ const [adderCost, setAdderCost] = useState({
             </div>
           </CardContent>
         </Card>
-
-        {/* Cost / GM / Price */}
-       <Card className="md:col-span-2">
+{/* Cost / GM / Price */}
+<Card className="md:col-span-2">
   <CardHeader className="pb-2">
     <CardTitle>Base System Price — Two-Way Cost ↔ GM ↔ Price</CardTitle>
   </CardHeader>
@@ -370,7 +369,7 @@ const [adderCost, setAdderCost] = useState({
         <Label>System Cost (COGS)</Label>
         <Input
           type="number"
-          value={recalc.cost}
+          value={Number.isFinite(recalc.cost) ? recalc.cost : 0}
           onChange={(e) => {
             setSystemCost(Number(e.target.value || 0));
             setLastEdited("cost");
@@ -391,14 +390,14 @@ const [adderCost, setAdderCost] = useState({
             step="0.01"
             min="0"
             max="0.95"
-            value={recalc.gm.toFixed(2)}
+            value={(Number.isFinite(recalc.gm) ? recalc.gm : 0).toFixed(2)}
             onChange={(e) => {
               setTargetGM(Number(e.target.value || 0));
               setLastEdited("gm");
             }}
           />
           <span className="text-sm text-muted-foreground">
-            ({(recalc.gm * 100).toFixed(0)}%)
+            ({Math.round((Number.isFinite(recalc.gm) ? recalc.gm : 0) * 100)}%)
           </span>
         </div>
       </div>
@@ -407,7 +406,7 @@ const [adderCost, setAdderCost] = useState({
       <div>
         <Label>Base System Price (Installed)</Label>
         <div className="mt-[6px] text-right text-2xl font-semibold tabular-nums">
-          {fmtUSD(recalc.price)}
+          {fmtUSD(Number.isFinite(recalc.price) ? recalc.price : 0)}
         </div>
         <p className="text-xs text-muted-foreground mt-1">
           Rounded to nearest $100 is recommended when quoting.
@@ -421,25 +420,14 @@ const [adderCost, setAdderCost] = useState({
       <div className="flex items-center gap-3 mt-1">
         <div className="w-full max-w-xs">
           <Slider
-            value={[recalc.gm]}
+            value={[Number.isFinite(recalc.gm) ? recalc.gm : 0]}
             min={0.2}
             max={0.7}
             step={0.01}
-            onValueChange={([v]) => {
-              setTargetGM(Number(v.toFixed(2)));
-              setLastEdited("gm");
-            }}
-          />
-        </div>
-        <div className="w-12 text-right tabular-nums">
-          {Math.round(recalc.gm * 100)}%
-        </div>
-      </div>
-    </div>
+            onValueChange={(vals) => {
+              const v = vals && vals.length ? vals[0] : 0;
+              setTargetGM(Number(v.toFixed(2))
 
-    {/* mobile GM presets unchanged below if you have them */}
-  </CardContent>
-</Card>
 
 
       {/* Adders */}
