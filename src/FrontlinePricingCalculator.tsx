@@ -356,6 +356,7 @@ const [adderCost, setAdderCost] = useState({
             </div>
           </CardContent>
         </Card>
+
 {/* Cost / GM / Price */}
 <Card className="md:col-span-2">
   <CardHeader className="pb-2">
@@ -426,7 +427,19 @@ const [adderCost, setAdderCost] = useState({
             step={0.01}
             onValueChange={(vals) => {
               const v = vals && vals.length ? vals[0] : 0;
-              setTargetGM(Number(v.toFixed(2))
+              setTargetGM(Number(v.toFixed(2)));
+              setLastEdited("gm");
+            }}
+          />
+        </div>
+        <div className="w-12 text-right tabular-nums">
+          {Math.round((Number.isFinite(recalc.gm) ? recalc.gm : 0) * 100)}%
+        </div>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
 
 
 
