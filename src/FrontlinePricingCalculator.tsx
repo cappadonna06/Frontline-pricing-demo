@@ -632,143 +632,202 @@ const [adderCost, setAdderCost] = useState({
     </p>
   </CardHeader>
 
-  <CardContent className="overflow-auto">
-    <table className="w-full text-sm">
-      <thead>
-        <tr className="text-left text-muted-foreground">
-          <th className="py-2">Option / Configuration</th>
-          <th className="py-2 text-right">Config 3 Zone (S)</th>
-          <th className="py-2 text-right">Config 6 Zone (M)</th>
-          <th className="py-2 text-right">Config 9 Zone (L)</th>
-          <th className="py-2 text-right">XL</th>
-        </tr>
-      </thead>
-      <tbody>
-        {/* SECTION: MP3 Options */}
-        <tr>
-          <td colSpan={5} className="pt-4 pb-2 text-xs uppercase tracking-wide text-muted-foreground">
-            <span className="font-semibold">MP3 Options (Base Reference)</span>
-          </td>
-        </tr>
+  <CardContent className="space-y-6 overflow-auto">
+    {/* FOAM (shared for MP3 & LV2) */}
+    <div>
+      <div className="mb-2 text-xs uppercase tracking-wide text-muted-foreground">
+        <span className="font-semibold">Foam (shared — MP3 &amp; LV2)</span>
+      </div>
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-left text-muted-foreground">
+            <th className="py-2">Size</th>
+            <th className="py-2 text-right">S</th>
+            <th className="py-2 text-right">M</th>
+            <th className="py-2 text-right">L</th>
+            <th className="py-2 text-right">XL</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr className="align-middle">
+            <td className="py-2 font-medium">Foam</td>
+            {(["S","M","L","XL"] as const).map((k) => (
+              <td key={`foam-${k}`} className="py-2">
+                <Input
+                  className="text-right"
+                  type="number"
+                  value={(adderCost.foam as any)[k]}
+                  onChange={(e) =>
+                    setAdderCost((s) => ({ ...s, foam: { ...s.foam, [k]: Number(e.target.value || 0) } }))
+                  }
+                />
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-        {/* Booster Pump — MP3 */}
-        <tr className="align-middle">
-          <td className="py-2 font-medium">Booster Pump</td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.booster.MP3.S}
-            onChange={e => setAdderCost(s => ({ ...s, booster: { ...s.booster, MP3: { ...s.booster.MP3, S: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.booster.MP3.M}
-            onChange={e => setAdderCost(s => ({ ...s, booster: { ...s.booster, MP3: { ...s.booster.MP3, M: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.booster.MP3.L}
-            onChange={e => setAdderCost(s => ({ ...s, booster: { ...s.booster, MP3: { ...s.booster.MP3, L: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2 text-right text-muted-foreground">—</td>
-        </tr>
+    {/* MP3 OPTIONS */}
+    <div>
+      <div className="mb-2 mt-2 text-xs uppercase tracking-wide text-muted-foreground">
+        <span className="font-semibold">MP3 Options</span>
+      </div>
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-left text-muted-foreground">
+            <th className="py-2">Option</th>
+            <th className="py-2 text-right">S</th>
+            <th className="py-2 text-right">M</th>
+            <th className="py-2 text-right">L</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* Booster (MP3) */}
+          <tr className="align-middle">
+            <td className="py-2 font-medium">Booster Pump</td>
+            {(["S","M","L"] as const).map((k) => (
+              <td key={`boost-mp3-${k}`} className="py-2">
+                <Input
+                  className="text-right"
+                  type="number"
+                  value={adderCost.booster.MP3[k]}
+                  onChange={(e) =>
+                    setAdderCost((s: any) => ({
+                      ...s,
+                      booster: { ...s.booster, MP3: { ...s.booster.MP3, [k]: Number(e.target.value || 0) } },
+                    }))
+                  }
+                />
+              </td>
+            ))}
+          </tr>
 
-        {/* Foam — includes XL */}
-        <tr className="align-middle">
-          <td className="py-2 font-medium">Foam</td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.foam.S}
-            onChange={e => setAdderCost(s => ({ ...s, foam: { ...s.foam, S: Number(e.target.value || 0) } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.foam.M}
-            onChange={e => setAdderCost(s => ({ ...s, foam: { ...s.foam, M: Number(e.target.value || 0) } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.foam.L}
-            onChange={e => setAdderCost(s => ({ ...s, foam: { ...s.foam, L: Number(e.target.value || 0) } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.foam.XL}
-            onChange={e => setAdderCost(s => ({ ...s, foam: { ...s.foam, XL: Number(e.target.value || 0) } }))} /></td>
-        </tr>
+          {/* Pool (MP3) */}
+          <tr className="align-middle">
+            <td className="py-2 font-medium">Pool</td>
+            {(["S","M","L"] as const).map((k) => (
+              <td key={`pool-mp3-${k}`} className="py-2">
+                <Input
+                  className="text-right"
+                  type="number"
+                  value={adderCost.pool.MP3[k]}
+                  onChange={(e) =>
+                    setAdderCost((s: any) => ({
+                      ...s,
+                      pool: { ...s.pool, MP3: { ...s.pool.MP3, [k]: Number(e.target.value || 0) } },
+                    }))
+                  }
+                />
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
 
-        {/* Solar — flat (repeat value for alignment) */}
-        <tr className="align-middle">
-          <td className="py-2 font-medium">Solar</td>
-          {["S","M","L","XL"].map(k => (
-            <td key={`solar-${k}`} className="py-2">
-              <Input className="text-right" type="number"
+    {/* LV2 OPTIONS */}
+    <div>
+      <div className="mb-2 mt-2 text-xs uppercase tracking-wide text-muted-foreground">
+        <span className="font-semibold">LV2 Options</span>
+      </div>
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-left text-muted-foreground">
+            <th className="py-2">Option</th>
+            <th className="py-2 text-right">S</th>
+            <th className="py-2 text-right">M</th>
+            <th className="py-2 text-right">L</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* Booster (LV2) */}
+          <tr className="align-middle">
+            <td className="py-2 font-medium">Booster Pump (LV2)</td>
+            {(["S","M","L"] as const).map((k) => (
+              <td key={`boost-lv2-${k}`} className="py-2">
+                <Input
+                  className="text-right"
+                  type="number"
+                  value={adderCost.booster.LV2[k]}
+                  onChange={(e) =>
+                    setAdderCost((s: any) => ({
+                      ...s,
+                      booster: { ...s.booster, LV2: { ...s.booster.LV2, [k]: Number(e.target.value || 0) } },
+                    }))
+                  }
+                />
+              </td>
+            ))}
+          </tr>
+
+          {/* Pool (LV2) */}
+          <tr className="align-middle">
+            <td className="py-2 font-medium">Pool (LV2)</td>
+            {(["S","M","L"] as const).map((k) => (
+              <td key={`pool-lv2-${k}`} className="py-2">
+                <Input
+                  className="text-right"
+                  type="number"
+                  value={adderCost.pool.LV2[k]}
+                  onChange={(e) =>
+                    setAdderCost((s: any) => ({
+                      ...s,
+                      pool: { ...s.pool, LV2: { ...s.pool.LV2, [k]: Number(e.target.value || 0) } },
+                    }))
+                  }
+                />
+              </td>
+            ))}
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {/* FLAT ITEMS (single input spanning columns) */}
+    <div>
+      <div className="mb-2 mt-2 text-xs uppercase tracking-wide text-muted-foreground">
+        <span className="font-semibold">Flat Items</span>
+      </div>
+      <table className="w-full text-sm">
+        <thead>
+          <tr className="text-left text-muted-foreground">
+            <th className="py-2">Item</th>
+            <th className="py-2 text-right" colSpan={3}>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          {/* Solar (flat) */}
+          <tr className="align-middle">
+            <td className="py-2 font-medium">Solar</td>
+            <td className="py-2" colSpan={3}>
+              <Input
+                className="text-right w-56 ml-auto"
+                type="number"
                 value={adderCost.solar.flat}
-                onChange={e => setAdderCost(s => ({ ...s, solar: { flat: Number(e.target.value || 0) } }))} />
+                onChange={(e) => setAdderCost((s) => ({ ...s, solar: { flat: Number(e.target.value || 0) } }))}
+              />
             </td>
-          ))}
-        </tr>
+          </tr>
 
-        {/* Pool — MP3 */}
-        <tr className="align-middle">
-          <td className="py-2 font-medium">Pool</td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.pool.MP3.S}
-            onChange={e => setAdderCost(s => ({ ...s, pool: { ...s.pool, MP3: { ...s.pool.MP3, S: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.pool.MP3.M}
-            onChange={e => setAdderCost(s => ({ ...s, pool: { ...s.pool, MP3: { ...s.pool.MP3, M: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.pool.MP3.L}
-            onChange={e => setAdderCost(s => ({ ...s, pool: { ...s.pool, MP3: { ...s.pool.MP3, L: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2 text-right text-muted-foreground">—</td>
-        </tr>
-
-        {/* SECTION: LV2 Options */}
-        <tr>
-          <td colSpan={5} className="pt-5 pb-2 text-xs uppercase tracking-wide text-muted-foreground">
-            <span className="font-semibold">LV2 Options (High-Flow Tier)</span>
-          </td>
-        </tr>
-
-        {/* Booster Pump — LV2 */}
-        <tr className="align-middle">
-          <td className="py-2 font-medium">Booster Pump (LV2)</td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.booster.LV2.S}
-            onChange={e => setAdderCost(s => ({ ...s, booster: { ...s.booster, LV2: { ...s.booster.LV2, S: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.booster.LV2.M}
-            onChange={e => setAdderCost(s => ({ ...s, booster: { ...s.booster, LV2: { ...s.booster.LV2, M: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.booster.LV2.L}
-            onChange={e => setAdderCost(s => ({ ...s, booster: { ...s.booster, LV2: { ...s.booster.LV2, L: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2 text-right text-muted-foreground">—</td>
-        </tr>
-
-        {/* Pool — LV2 */}
-        <tr className="align-middle">
-          <td className="py-2 font-medium">Pool (LV2)</td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.pool.LV2.S}
-            onChange={e => setAdderCost(s => ({ ...s, pool: { ...s.pool, LV2: { ...s.pool.LV2, S: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.pool.LV2.M}
-            onChange={e => setAdderCost(s => ({ ...s, pool: { ...s.pool, LV2: { ...s.pool.LV2, M: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2"><Input className="text-right" type="number"
-            value={adderCost.pool.LV2.L}
-            onChange={e => setAdderCost(s => ({ ...s, pool: { ...s.pool, LV2: { ...s.pool.LV2, L: Number(e.target.value || 0) } } }))} /></td>
-          <td className="py-2 text-right text-muted-foreground">—</td>
-        </tr>
-
-        {/* SECTION: Optional Accessories */}
-        <tr>
-          <td colSpan={5} className="pt-5 pb-2 text-xs uppercase tracking-wide text-muted-foreground">
-            <span className="font-semibold">Optional Accessories</span>
-          </td>
-        </tr>
-
-        {/* Large UPS — flat */}
-        <tr className="align-middle">
-          <td className="py-2 font-medium">Large UPS</td>
-          {["S","M","L","XL"].map(k => (
-            <td key={`ups-${k}`} className="py-2">
-              <Input className="text-right" type="number"
+          {/* UPS (flat) */}
+          <tr className="align-middle">
+            <td className="py-2 font-medium">Large UPS</td>
+            <td className="py-2" colSpan={3}>
+              <Input
+                className="text-right w-56 ml-auto"
+                type="number"
                 value={adderCost.ups.flat}
-                onChange={e => setAdderCost(s => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))} />
+                onChange={(e) => setAdderCost((s) => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))}
+              />
             </td>
-          ))}
-        </tr>
-      </tbody>
-    </table>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </CardContent>
 </Card>
+
 
 
 
