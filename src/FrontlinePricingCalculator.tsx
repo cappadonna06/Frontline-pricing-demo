@@ -116,7 +116,7 @@ const [adderCost, setAdderCost] = useState({
 
   // Pool: MP3 and LV2
   pool: {
-    MP3: { S: 2832.74, M: 2832.74, L: 2832.74 },
+    MP3: { S: 2830, M: 3200, L: 3400 },
     LV2: { S: 5000, M: 6000, L: 7000 },
   },
 
@@ -971,7 +971,7 @@ function AdderBlock({
   setCostBySize: (v: any) => void;
   calcPrice: (k: any) => number;
 }) {
-  const GRID = "grid grid-cols-[48px,48px,86px] gap-2"; // Size | Cost | Price
+  const GRID = "grid grid-cols-[48px,72px,86px] gap-2"; // Size | Cost | Price
 
   const header = (
     <div className="flex items-center justify-between mb-2">
