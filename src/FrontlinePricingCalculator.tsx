@@ -787,7 +787,8 @@ function SummaryRow({ label, value, bold = false }: { label: string; value: Reac
 }
 // Shared grid template for adder rows (header + rows stay perfectly aligned)
 // Shared grid template for adder rows (header + rows stay perfectly aligned)
-const ADDER_COLS = "grid grid-cols-[56px,1fr,120px] gap-2";
+// Compact, stable column widths: size | cost flexes | price fixed
+const ADDER_COLS = "grid grid-cols-[56px,minmax(0,1fr),120px] gap-2";
 
 /** ──────────────────────────────────────────────────────────────────────────
  * AdderBlock
@@ -877,13 +878,17 @@ function AdderBlock({
       }`}
     >
       <div className="text-[11px] uppercase tracking-wide text-muted-foreground">{k}</div>
+
+      {/* Cost input — compact, never collapses text */}
       <Input
-        className="w-full max-w-[150px] h-9 text-right tabular-nums text-[13px] leading-none"
+        className="w-full h-9 px-2 text-right tabular-nums text-[13px] leading-none"
         type="number"
-        value={costBySize[k] ?? ""}
+        value={costBySize[k] ?? 0}
         onChange={(e) => setCostBySize({ ...costBySize, [k]: Number(e.target.value || 0) })}
       />
-      <div className="text-right tabular-nums font-medium text-[13px] whitespace-nowrap">
+
+      {/* Price — stays inside card */}
+      <div className="text-right tabular-nums font-medium text-[13px] whitespace-nowrap overflow-hidden text-ellipsis">
         {fmtUSD(calcPrice(k))}
       </div>
     </div>
