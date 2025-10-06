@@ -62,7 +62,7 @@ const GM_PRESETS = [
 const ADDER_NOTES = {
   foam: "Foam auto-sizes to system S/M/L; XL available as manual override.",
   booster: "Booster auto-sizes to meet required pressure/flow.",
-  pool: "Pool/Draft kit scales by hose diameter & flow.",
+  pool: "Pool/Draft auto-sizes to meet required pressure/flow",
   solar: "Universal (no size)",
   ups: "Universal (no size)",
 };
@@ -965,7 +965,7 @@ function AdderBlock({
   onToggle: (v: boolean) => void;
   recommendedSize: "S" | "M" | "L";
   activeSize: "S" | "M" | "L" | "XL";
-  onSelectSize: (v: any) => void; // null means follow recommendation
+  onSelectSize: (v: any) => void;
   sizes: ("S" | "M" | "L" | "XL")[];
   costBySize: any;
   setCostBySize: (v: any) => void;
@@ -977,29 +977,46 @@ function AdderBlock({
         <div className="font-medium">{title}</div>
         <div className="text-xs text-muted-foreground">{note}</div>
       </div>
- <Checkbox checked={enabled} onCheckedChange={onToggle} aria-label={`Include ${title}`} />
-
+      <Checkbox checked={enabled} onCheckedChange={onToggle} aria-label={`Include ${title}`} />
     </div>
   );
 
   const sizeSelector = (
     <div>
-      <div className="text-[11px] text-muted-foreground">Selected size <span className="font-medium">{activeSize}</span> · <span className="">Recommended: {recommendedSize}</span></div>
-      <RadioGroup className="mt-1 grid grid-cols-4 gap-2" value={String(activeSize)} onValueChange={(v) => onSelectSize(v as any)}>
+      <div className="text-[11px] text-muted-foreground">
+        Selected size <span className="font-medium">{activeSize}</span> · <span>Recommended: {recommendedSize}</span>
+      </div>
+      <RadioGroup
+        className="mt-1 grid grid-cols-4 gap-2"
+        value={String(activeSize)}
+        onValueChange={(v) => onSelectSize(v as any)}
+      >
         {sizes.map((s) => (
-          <label key={s} className={`border rounded-md px-2 py-1 text-center text-xs cursor-pointer ${activeSize === s ? "bg-primary/10 border-primary" : "hover:bg-muted"}`}>
+          <label
+            key={s}
+            className={`border rounded-md px-2 py-1 text-center text-xs cursor-pointer ${
+              activeSize === s ? "bg-primary/10 border-primary" : "hover:bg-muted"
+            }`}
+          >
             <RadioGroupItem value={String(s)} className="sr-only" />
             {s}
           </label>
         ))}
       </RadioGroup>
       <div className="text-[11px] text-muted-foreground mt-1">Clear override to follow recommendation.</div>
-      <div className="mt-1"><Button variant="ghost" size="sm" onClick={() => onSelectSize(null as any)}>Use recommended</Button></div>
+      <div className="mt-1">
+        <Button variant="ghost" size="sm" onClick={() => onSelectSize(null as any)}>
+          Use recommended
+        </Button>
+      </div>
     </div>
   );
 
+  // ⬇️ same grid template for header + rows
+  const GRID = "grid grid-cols-[70px,180px,110px] gap-2";
+
   const tableHeader = (
-    <div className="grid grid-cols-[70px,1fr,90px] gap-2 text-xs font-medium text-muted-foreground">
+    <div className={`${GRID} text-xs font-medium text-muted-foreground`}>
       <div>Size</div>
       <div>Cost</div>
       <div className="text-right">Price</div>
@@ -1007,16 +1024,34 @@ function AdderBlock({
   );
 
   const Row = ({ k }: { k: any }) => (
-    <div className={`grid grid-cols-3 items-center gap-2 p-2 rounded-md ${String(activeSize) === String(k) ? "bg-muted ring-1 ring-muted-foreground/20" : ""}`}>
+    <div
+      className={`${GRID} items-center p-2 rounded-md ${
+        String(activeSize) === String(k) ? "bg-muted ring-1 ring-muted-foreground/20" : ""
+      }`}
+    >
       <div className="text-xs uppercase tracking-wide text-muted-foreground">{k}</div>
-      <Input className="w-full h-8 text-right" type="number" value={costBySize[k] ?? ""} onChange={(e) => setCostBySize({ ...costBySize, [k]: Number(e.target.value || 0) })} />
-      <div className="text-right text-sm font-medium tabular-nums">{fmtUSD(calcPrice(k))}</div>
+      <Input
+        className="w-full min-w-[10rem] h-9 text-right tabular-nums"
+        type="number"
+        value={costBySize[k] ?? ""}
+        onChange={(e) => setCostBySize({ ...costBySize, [k]: Number(e.target.value || 0) })}
+      />
+      <div className="text-right text-sm font-medium tabular-nums whitespace-nowrap">
+        {fmtUSD(calcPrice(k))}
+      </div>
     </div>
   );
 
   return (
     <Card className="p-4 space-y-2">
-      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">Type: <span className="font-semibold">{typeLabel}</span> {activeSize !== recommendedSize ? <span className="ml-2 text-amber-600">(Overridden)</span> : <span className="ml-2 text-muted-foreground">(Following system)</span>}</div>
+      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+        Type: <span className="font-semibold">{typeLabel}</span>{" "}
+        {activeSize !== recommendedSize ? (
+          <span className="ml-2 text-amber-600">(Overridden)</span>
+        ) : (
+          <span className="ml-2 text-muted-foreground">(Following system)</span>
+        )}
+      </div>
       {header}
       {sizeSelector}
       <div className="mt-2 space-y-1">
@@ -1028,3 +1063,4 @@ function AdderBlock({
     </Card>
   );
 }
+
