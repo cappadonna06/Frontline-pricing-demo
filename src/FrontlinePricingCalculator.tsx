@@ -358,53 +358,89 @@ const [adderCost, setAdderCost] = useState({
         </Card>
 
         {/* Cost / GM / Price */}
-        <Card className="md:col-span-2">
-          <CardHeader className="pb-2">
-            <CardTitle>Base System Price — Two‑Way Cost ↔ GM ↔ Price</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <Label>System Cost (COGS)</Label>
-                <Input type="number" value={recalc.cost} onChange={(e) => { setSystemCost(Number(e.target.value || 0)); setLastEdited("cost"); }} />
-              </div>
-              <div>
-                <Label>Target GM</Label>
-                <div className="flex items-center gap-2">
-                  <Input className="w-28" type="number" step="0.01" min="0" max="0.95" value={recalc.gm.toFixed(2)} onChange={(e) => { setTargetGM(Number(e.target.value || 0)); setLastEdited("gm"); }} />
-                  <span className="text-sm text-muted-foreground">({(recalc.gm * 100).toFixed(0)}%)</span>
-                </div>
-              </div>
-              <div>
-                <Label>Base System Price (Installed)</Label>
-                <Input type="number" value={recalc.price} onChange={(e) => { setSystemPrice(Number(e.target.value || 0)); setLastEdited("price"); }} />
-                <p className="text-xs text-muted-foreground mt-1">Rounded to nearest $100 is recommended when quoting.</p>
-              </div>
-            </div>
-<div>
-  <Label className="text-xs text-muted-foreground">System Target GM</Label>
-  <div className="flex items-center gap-3 mt-1">
-    <div className="w-full max-w-xs">
-      <Slider
-        value={[recalc.gm]}
-        min={0.2}
-        max={0.7}
-        step={0.01}
-        onValueChange={([v]) => { setTargetGM(Number(v.toFixed(2))); setLastEdited("gm"); }}
-      />
-    </div>
-    <div className="w-12 text-right tabular-nums">{Math.round(recalc.gm * 100)}%</div>
-  </div>
-</div>
+       <Card className="md:col-span-2">
+  <CardHeader className="pb-2">
+    <CardTitle>Base System Price — Two-Way Cost ↔ GM ↔ Price</CardTitle>
+  </CardHeader>
 
-            <div className="flex md:hidden gap-2">
-              {GM_PRESETS.map(p => (
-                <Button key={p.key} variant="secondary" size="sm" onClick={() => applyGMPreset(p.systemGM, p.adderGM)}>{p.label}</Button>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+  <CardContent className="grid gap-4">
+    <div className="grid md:grid-cols-3 gap-4">
+      {/* Cost */}
+      <div>
+        <Label>System Cost (COGS)</Label>
+        <Input
+          type="number"
+          value={recalc.cost}
+          onChange={(e) => {
+            setSystemCost(Number(e.target.value || 0));
+            setLastEdited("cost");
+          }}
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          System cost input from cost model; does not include adders (see below).
+        </p>
       </div>
+
+      {/* GM */}
+      <div>
+        <Label>Target GM</Label>
+        <div className="flex items-center gap-2">
+          <Input
+            className="w-28"
+            type="number"
+            step="0.01"
+            min="0"
+            max="0.95"
+            value={recalc.gm.toFixed(2)}
+            onChange={(e) => {
+              setTargetGM(Number(e.target.value || 0));
+              setLastEdited("gm");
+            }}
+          />
+          <span className="text-sm text-muted-foreground">
+            ({(recalc.gm * 100).toFixed(0)}%)
+          </span>
+        </div>
+      </div>
+
+      {/* Price (readout) */}
+      <div>
+        <Label>Base System Price (Installed)</Label>
+        <div className="mt-[6px] text-right text-2xl font-semibold tabular-nums">
+          {fmtUSD(recalc.price)}
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Rounded to nearest $100 is recommended when quoting.
+        </p>
+      </div>
+    </div>
+
+    {/* Slider */}
+    <div>
+      <Label className="text-xs text-muted-foreground">System Target GM</Label>
+      <div className="flex items-center gap-3 mt-1">
+        <div className="w-full max-w-xs">
+          <Slider
+            value={[recalc.gm]}
+            min={0.2}
+            max={0.7}
+            step={0.01}
+            onValueChange={([v]) => {
+              setTargetGM(Number(v.toFixed(2)));
+              setLastEdited("gm");
+            }}
+          />
+        </div>
+        <div className="w-12 text-right tabular-nums">
+          {Math.round(recalc.gm * 100)}%
+        </div>
+      </div>
+    </div>
+
+    {/* mobile GM presets unchanged below if you have them */}
+  </CardContent>
+</Card>
+
 
       {/* Adders */}
       <Card>
