@@ -971,6 +971,8 @@ function AdderBlock({
   setCostBySize: (v: any) => void;
   calcPrice: (k: any) => number;
 }) {
+  const GRID = "grid grid-cols-[48px,120px,86px] gap-2"; // Size | Cost | Price
+
   const header = (
     <div className="flex items-center justify-between mb-2">
       <div>
@@ -984,7 +986,7 @@ function AdderBlock({
   const sizeSelector = (
     <div>
       <div className="text-[11px] text-muted-foreground">
-        Selected size <span className="font-medium">{activeSize}</span> · <span>Recommended: {recommendedSize}</span>
+        Selected size <span className="font-medium">{activeSize}</span> · Recommended: {recommendedSize}
       </div>
       <RadioGroup
         className="mt-1 grid grid-cols-4 gap-2"
@@ -1012,9 +1014,6 @@ function AdderBlock({
     </div>
   );
 
-  // ⬇️ same grid template for header + rows
-  const GRID = "grid grid-cols-[70px,70px,110px] gap-2";
-
   const tableHeader = (
     <div className={`${GRID} text-xs font-medium text-muted-foreground`}>
       <div>Size</div>
@@ -1030,12 +1029,15 @@ function AdderBlock({
       }`}
     >
       <div className="text-xs uppercase tracking-wide text-muted-foreground">{k}</div>
+
+      {/* Fixed-width input — stops the “blob” */}
       <Input
-        className="w-full min-w-[10rem] h-9 text-right tabular-nums"
+        className="h-9 w-[120px] text-right tabular-nums"
         type="number"
         value={costBySize[k] ?? ""}
         onChange={(e) => setCostBySize({ ...costBySize, [k]: Number(e.target.value || 0) })}
       />
+
       <div className="text-right text-sm font-medium tabular-nums whitespace-nowrap">
         {fmtUSD(calcPrice(k))}
       </div>
@@ -1052,8 +1054,10 @@ function AdderBlock({
           <span className="ml-2 text-muted-foreground">(Following system)</span>
         )}
       </div>
+
       {header}
       {sizeSelector}
+
       <div className="mt-2 space-y-1">
         {tableHeader}
         {sizes.map((k) => (
@@ -1063,4 +1067,5 @@ function AdderBlock({
     </Card>
   );
 }
+
 
