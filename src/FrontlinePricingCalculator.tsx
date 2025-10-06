@@ -971,7 +971,7 @@ function AdderBlock({
   setCostBySize: (v: any) => void;
   calcPrice: (k: any) => number;
 }) {
-  const GRID = "grid grid-cols-[48px,48px,86px] gap-2"; // Size | Cost | Price
+  const GRID = "grid grid-cols-[38px,72px,72px] gap-1"; // Size | Cost | Price
 
   const header = (
     <div className="flex items-center justify-between mb-2">
