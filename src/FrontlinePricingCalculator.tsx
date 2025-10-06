@@ -1014,13 +1014,13 @@ function AdderBlock({
     </div>
   );
 
-  const tableHeader = (
-    <div className={`${GRID} text-xs font-medium text-muted-foreground`}>
-      <div>Size</div>
-      <div>Cost</div>
-      <div className="text-right">Price</div>
-    </div>
-  );
+const tableHeader = (
+  <div className={`${GRID} text-xs font-medium text-muted-foreground`}>
+    <div className="justify-self-start">Size</div>
+    <div className="justify-self-center">Cost</div>
+    <div className="justify-self-end text-right">Price</div>
+  </div>
+);
 
   const Row = ({ k }: { k: any }) => (
     <div
