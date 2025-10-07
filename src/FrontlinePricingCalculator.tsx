@@ -485,17 +485,10 @@ const [adderCost, setAdderCost] = useState({
 
            {/* Solar */}
 <Card
-  className={`p-4 relative border transition-all ${
-    includeSolar ? "border-emerald-400" : ""
+  className={`p-4 relative transition-all duration-200 border ${
+    includeSolar ? "border-emerald-400 shadow-sm" : "border-gray-200"
   }`}
 >
-  {/* Accent strip */}
-  <div
-    className={`absolute top-0 left-0 h-1 w-full rounded-t-md transition-colors ${
-      includeSolar ? "bg-emerald-400" : "bg-transparent"
-    }`}
-  />
-
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
     Type: <span className="font-semibold">Universal</span>
   </div>
@@ -536,6 +529,7 @@ const [adderCost, setAdderCost] = useState({
     </div>
   </div>
 </Card>
+
 
 
 {/* UPS */}
