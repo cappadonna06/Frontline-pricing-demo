@@ -797,7 +797,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
       {/* RIGHT: Annual (Recurring) */}
       <section>
         <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-2">
-          Annual (Recurring)
+          Recurring
         </div>
 
         <div className="space-y-2">
