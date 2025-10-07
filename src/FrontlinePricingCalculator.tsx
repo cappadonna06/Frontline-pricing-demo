@@ -1238,13 +1238,9 @@ const tableHeader = (
   </div>
 );
 
-  const Row = ({ k }: { k: any }) => (
-<div
-  className={`grid grid-cols-[30px,120px,1fr] items-center p-2 rounded-md relative overflow-visible transition-all ${
-    String(activeSize) === String(k)
-      ? "bg-emerald-50 border border-emerald-200 shadow-sm before:content-[''] before:absolute before:inset-y-1 before:left-0 before:w-1 before:rounded before:bg-emerald-400"
-      : "border border-transparent"
-  }`}
+const Row = ({ k }: { k: any }) => (
+  <div className={`grid grid-cols-3 items-center gap-2 p-2 rounded-md ${String(activeSize) === String(k) ? "bg-muted ring-1 ring-muted-foreground/20" : ""}`}>
+
 >
 
       <div className="text-xs uppercase tracking-wide text-muted-foreground">{k}</div>
