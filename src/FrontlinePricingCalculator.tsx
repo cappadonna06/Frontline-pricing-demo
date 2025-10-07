@@ -775,41 +775,53 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
     <CardTitle>Quote Summary</CardTitle>
   </CardHeader>
 
-  <CardContent className="grid md:grid-cols-2 gap-8">
-    {/* One-time costs */}
-    <div>
-      <div className="space-y-2">
-        <SummaryRow label="System Price (Installed)" value={fmtUSD(recalc.price)} />
-        <SummaryRow label="Adders Total" value={fmtUSD(addersTotal)} />
-      </div>
+  <CardContent>
+    <div className="grid md:grid-cols-2 gap-8">
+      {/* LEFT: One-Time */}
+      <section>
+        <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-2">
+          One-Time
+        </div>
 
-      <div className="flex justify-between border-t pt-3 mt-3 font-semibold text-lg">
-        <span>One-Time Total</span>
-        <span className="tabular-nums">{fmtUSD(oneTimeTotal)}</span>
-      </div>
-    </div>
+        <div className="space-y-2">
+          <SummaryRow label="System Price (Installed)" value={fmtUSD(recalc.price)} />
+          <SummaryRow label="Adders Total" value={fmtUSD(addersTotal)} />
+        </div>
 
-    {/* Recurring (annualized) */}
-    <div>
-      <div className="text-sm text-muted-foreground mb-1">Annual Recurring</div>
-      <div className="space-y-2">
-        <SummaryRow label="ASE (Annual)" value={fmtUSD(aseAnnual)} />
-        <div className="flex items-baseline justify-between">
-          <span className="text-sm text-muted-foreground">Subscription</span>
-          <div className="text-right">
-            <div className="tabular-nums">{fmtUSD(subMonthly)}/mo</div>
-            <div className="text-xs text-muted-foreground tabular-nums">≈ {fmtUSD(subAnnual)} / yr</div>
+        <div className="flex justify-between border-t pt-3 mt-3 font-semibold text-lg">
+          <span>One-Time Total</span>
+          <span className="tabular-nums">{fmtUSD(oneTimeTotal)}</span>
+        </div>
+      </section>
+
+      {/* RIGHT: Annual (Recurring) */}
+      <section>
+        <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-2">
+          Annual (Recurring)
+        </div>
+
+        <div className="space-y-2">
+          <SummaryRow label="ASE (Annual)" value={fmtUSD(aseAnnual)} />
+
+          {/* Subscription with /mo and ≈ /yr inline */}
+          <div className="flex items-baseline justify-between">
+            <span className="text-sm text-muted-foreground">Subscription</span>
+            <div className="text-right">
+              <div className="tabular-nums">{fmtUSD(subMonthly)}/mo</div>
+              <div className="text-xs text-muted-foreground tabular-nums">≈ {fmtUSD(subAnnual)} / yr</div>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div className="flex justify-between border-t pt-3 mt-3 font-semibold text-lg">
-        <span>Annual Recurring Total</span>
-        <span className="tabular-nums">{fmtUSD(recurringAnnual)}</span>
-      </div>
+        <div className="flex justify-between border-t pt-3 mt-3 font-semibold text-lg">
+          <span>Annual Recurring Total</span>
+          <span className="tabular-nums">{fmtUSD(recurringAnnual)}</span>
+        </div>
+      </section>
     </div>
   </CardContent>
 </Card>
+
 
 
       <Card>
