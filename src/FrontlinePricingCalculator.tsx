@@ -484,7 +484,18 @@ const [adderCost, setAdderCost] = useState({
             />
 
            {/* Solar */}
-<Card className="p-4 relative">
+<Card
+  className={`p-4 relative border transition-all ${
+    includeSolar ? "border-emerald-400" : ""
+  }`}
+>
+  {/* Accent strip */}
+  <div
+    className={`absolute top-0 left-0 h-1 w-full rounded-t-md transition-colors ${
+      includeSolar ? "bg-emerald-400" : "bg-transparent"
+    }`}
+  />
+
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
     Type: <span className="font-semibold">Universal</span>
   </div>
@@ -511,7 +522,12 @@ const [adderCost, setAdderCost] = useState({
         aria-label="Solar Cost"
         type="number"
         value={adderCost.solar.flat}
-        onChange={(e) => setAdderCost((s) => ({ ...s, solar: { flat: Number(e.target.value || 0) } }))}
+        onChange={(e) =>
+          setAdderCost((s) => ({
+            ...s,
+            solar: { flat: Number(e.target.value || 0) },
+          }))
+        }
         className="text-right"
       />
       <div className="text-right text-sm font-medium tabular-nums">
@@ -520,6 +536,7 @@ const [adderCost, setAdderCost] = useState({
     </div>
   </div>
 </Card>
+
 
 {/* UPS */}
 <Card className="p-4 relative">
