@@ -216,6 +216,8 @@ subMonthly = Math.round(subMonthly * 100) / 100;
   // Totals
   // -----------------------------
   const oneTimeTotal = recalc.price + addersTotal;
+const subAnnual  = Math.round(subMonthly * 12 * 100) / 100;
+const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
 
   // -----------------------------
   // Actions
@@ -690,7 +692,6 @@ subMonthly = Math.round(subMonthly * 100) / 100;
     </CardContent>
   </Card>
 
-  {/* Subscription */}
  {/* Subscription */}
 <Card>
   <CardHeader>
@@ -768,34 +769,48 @@ subMonthly = Math.round(subMonthly * 100) / 100;
 </div>
 
 
-      {/* Totals */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Quote Summary</CardTitle>
-        </CardHeader>
-        <CardContent className="grid md:grid-cols-3 gap-4 items-start">
-          <div className="space-y-1">
-            <SummaryRow label="System Price (Installed)" value={fmtUSD(recalc.price)} />
-            <SummaryRow label="Adders Total" value={fmtUSD(addersTotal)} />
-            <div className="flex justify-between border-t pt-2 font-semibold text-lg">
-              <span>One‑Time Total</span>
-              <span>{fmtUSD(oneTimeTotal)}</span>
-            </div>
+     {/* Quote Summary */}
+<Card>
+  <CardHeader>
+    <CardTitle>Quote Summary</CardTitle>
+  </CardHeader>
+
+  <CardContent className="grid md:grid-cols-2 gap-8">
+    {/* One-time costs */}
+    <div>
+      <div className="space-y-2">
+        <SummaryRow label="System Price (Installed)" value={fmtUSD(recalc.price)} />
+        <SummaryRow label="Adders Total" value={fmtUSD(addersTotal)} />
+      </div>
+
+      <div className="flex justify-between border-t pt-3 mt-3 font-semibold text-lg">
+        <span>One-Time Total</span>
+        <span className="tabular-nums">{fmtUSD(oneTimeTotal)}</span>
+      </div>
+    </div>
+
+    {/* Recurring (annualized) */}
+    <div>
+      <div className="text-sm text-muted-foreground mb-1">Annual Recurring</div>
+      <div className="space-y-2">
+        <SummaryRow label="ASE (Annual)" value={fmtUSD(aseAnnual)} />
+        <div className="flex items-baseline justify-between">
+          <span className="text-sm text-muted-foreground">Subscription</span>
+          <div className="text-right">
+            <div className="tabular-nums">{fmtUSD(subMonthly)}/mo</div>
+            <div className="text-xs text-muted-foreground tabular-nums">≈ {fmtUSD(subAnnual)} / yr</div>
           </div>
-          <div className="space-y-1">
-            <SummaryRow label="ASE (Annual)" value={fmtUSD(aseAnnual)} />
-            <SummaryRow label="Subscription (Monthly)" value={fmtUSD(subMonthly)} />
-          </div>
-          <div className="text-xs text-muted-foreground">
-            <p>Notes:</p>
-            <ul className="list-disc pl-4 space-y-1">
-              <li>Foam and Pool/Draft follow system size by default; override controls per‑adder.</li>
-              <li>GM = (Price − Cost) / Price. You can edit any field; others recompute.</li>
-              <li>All pricing in USD; taxes/permits/trenching/travel not included.</li>
-            </ul>
-          </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
+
+      <div className="flex justify-between border-t pt-3 mt-3 font-semibold text-lg">
+        <span>Annual Recurring Total</span>
+        <span className="tabular-nums">{fmtUSD(recurringAnnual)}</span>
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
 
       <Card>
   <CardHeader>
