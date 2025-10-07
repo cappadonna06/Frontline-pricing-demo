@@ -640,130 +640,121 @@ const aseAnnual = Math.round(aseAnnualRaw * aseMultiplier); // AFTER multiplier
 </Card>
 
      {/* ASE & Subscription */}
-<Card className="col-span-full">
-  <div className="grid md:grid-cols-2 gap-4">
-    {/* ASE */}
-    <Card>
-      <CardHeader>
-        <CardTitle>ASE (Annual Service & Extension)</CardTitle>
-        <p className="text-xs text-muted-foreground">
-          Service adders are editable below and sync live with these totals.
+<div className="grid md:grid-cols-2 gap-4">
+  {/* ASE */}
+  <Card>
+    <CardHeader>
+      <CardTitle>ASE (Annual Service & Extension)</CardTitle>
+      <p className="text-xs text-muted-foreground">
+        Service adders are editable below and sync live with these totals.
+      </p>
+    </CardHeader>
+
+    <CardContent className="space-y-3">
+      {/* Breakdown */}
+      <div className="grid grid-cols-2 gap-2 text-sm">
+        <SummaryRow label={`Base (${family}-${size})`} value={fmtUSD(aseBase)} />
+        {includeFoam && (
+          <SummaryRow label="Foam adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].foam)} />
+        )}
+        {includeBooster && (
+          <SummaryRow label="Booster adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].booster)} />
+        )}
+        {includePool && (
+          <SummaryRow label="Pool/Draft adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].pool)} />
+        )}
+        {includeSolar && (
+          <SummaryRow label="Solar adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].solar)} />
+        )}
+      </div>
+
+      {/* Total (multiplied) */}
+      <div className="flex justify-between border-t pt-2 font-medium">
+        <span>Total (Annual)</span>
+        <span>{fmtUSD(aseAnnual)}</span>
+      </div>
+
+      {/* Slider at bottom */}
+      <div className="pt-1">
+        <Label className="text-xs text-muted-foreground">ASE Multiplier</Label>
+        <div className="flex items-center gap-3 mt-1">
+          <div className="w-full max-w-xs">
+            <Slider
+              value={[aseMultiplier]}
+              min={0.5}
+              max={2}
+              step={0.05}
+              onValueChange={([v]) => setAseMultiplier(Number(v.toFixed(2)))}
+            />
+          </div>
+          <div className="w-16 text-right tabular-nums">×{aseMultiplier.toFixed(2)}</div>
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Applies to ASE base and all ASE adders.
         </p>
-      </CardHeader>
+      </div>
+    </CardContent>
+  </Card>
 
-      <CardContent className="space-y-3">
-        {/* Breakdown */}
-        <div className="grid grid-cols-2 gap-2 text-sm">
-          <SummaryRow label={`Base (${family}-${size})`} value={fmtUSD(aseBase)} />
-          {includeFoam && (
-            <SummaryRow
-              label="Foam adder"
-              value={fmtUSD(ASE_ADDERS[family][systemSizeKey].foam)}
-            />
-          )}
-          {includeBooster && (
-            <SummaryRow
-              label="Booster adder"
-              value={fmtUSD(ASE_ADDERS[family][systemSizeKey].booster)}
-            />
-          )}
-          {includePool && (
-            <SummaryRow
-              label="Pool/Draft adder"
-              value={fmtUSD(ASE_ADDERS[family][systemSizeKey].pool)}
-            />
-          )}
-          {includeSolar && (
-            <SummaryRow
-              label="Solar adder"
-              value={fmtUSD(ASE_ADDERS[family][systemSizeKey].solar)}
-            />
-          )}
-        </div>
+  {/* Subscription */}
+  <Card>
+    <CardHeader>
+      <CardTitle>Subscription (Connectivity / App / OTA)</CardTitle>
+    </CardHeader>
 
-        {/* Total (multiplied) */}
-        <div className="flex justify-between border-t pt-2 font-medium">
-          <span>Total (Annual)</span>
-          <span>{fmtUSD(aseAnnual)}</span>
-        </div>
-
-        {/* Slider at bottom */}
-        <div className="pt-1">
-          <Label className="text-xs text-muted-foreground">ASE Multiplier</Label>
-          <div className="flex items-center gap-3 mt-1">
-            <div className="w-full max-w-xs">
-              <Slider
-                value={[aseMultiplier]}
-                min={0.5}
-                max={2}
-                step={0.05}
-                onValueChange={([v]) => setAseMultiplier(Number(v.toFixed(2)))}
-              />
-            </div>
-            <div className="w-16 text-right tabular-nums">×{aseMultiplier.toFixed(2)}</div>
+    <CardContent className="space-y-3">
+      {/* Switches */}
+      <div className="grid grid-cols-2 gap-3">
+        <div className="flex items-center justify-between gap-2 col-span-2">
+          <div>
+            <Label>High-Usage Add-On (+$20)</Label>
+            <p className="text-xs text-muted-foreground">
+              For cell-primary or satellite systems
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            Applies to ASE base and all ASE adders.
-          </p>
+          <Switch checked={isHighUsage} onCheckedChange={setIsHighUsage} />
         </div>
-      </CardContent>
-    </Card>
 
-    {/* Subscription */}
-    <Card>
-      <CardHeader>
-        <CardTitle>Subscription (Connectivity / App / OTA)</CardTitle>
-      </CardHeader>
-
-      <CardContent className="space-y-3">
-        {/* Switches */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="flex items-center justify-between gap-2 col-span-2">
-            <div>
-              <Label>High-Usage Add-On (+$20)</Label>
-              <p className="text-xs text-muted-foreground">For cell-primary or satellite systems</p>
-            </div>
-            <Switch checked={isHighUsage} onCheckedChange={setIsHighUsage} />
+        <div className="flex items-center justify-between gap-2 col-span-2">
+          <div className="flex items-center gap-2">
+            <Switch checked={annualBilling} onCheckedChange={setAnnualBilling} />
+            <span className="text-sm">Annual billing (–10%)</span>
           </div>
-
-          <div className="flex items-center justify-between gap-2 col-span-2">
-            <div className="flex items-center gap-2">
-              <Switch checked={annualBilling} onCheckedChange={setAnnualBilling} />
-              <span className="text-sm">Annual billing (–10%)</span>
-            </div>
-            <div className="text-sm">Base: {family} @ {fmtUSD(SUB_BASE[family])}/mo</div>
+          <div className="text-sm">
+            Base: {family} @ {fmtUSD(SUB_BASE[family])}/mo
           </div>
         </div>
+      </div>
 
-        {/* Total */}
-        <div className="flex justify-between border-t pt-2 font-medium">
-          <span>Total Subscription (Monthly)</span>
-          <span>{fmtUSD(subMonthly)}</span>
-        </div>
+      {/* Total */}
+      <div className="flex justify-between border-t pt-2 font-medium">
+        <span>Total Subscription (Monthly)</span>
+        <span>{fmtUSD(subMonthly)}</span>
+      </div>
 
-        {/* Slider at bottom */}
-        <div className="pt-1">
-          <Label className="text-xs text-muted-foreground">Subscription Multiplier</Label>
-          <div className="flex items-center gap-3 mt-1">
-            <div className="w-full max-w-xs">
-              <Slider
-                value={[subMultiplier]}
-                min={0.5}
-                max={2}
-                step={0.05}
-                onValueChange={([v]) => setSubMultiplier(Number(v.toFixed(2)))}
-              />
-            </div>
-            <div className="w-16 text-right tabular-nums">×{subMultiplier.toFixed(2)}</div>
+      {/* Slider at bottom */}
+      <div className="pt-1">
+        <Label className="text-xs text-muted-foreground">Subscription Multiplier</Label>
+        <div className="flex items-center gap-3 mt-1">
+          <div className="w-full max-w-xs">
+            <Slider
+              value={[subMultiplier]}
+              min={0.5}
+              max={2}
+              step={0.05}
+              onValueChange={([v]) => setSubMultiplier(Number(v.toFixed(2)))}
+            />
           </div>
-          <p className="text-xs text-muted-foreground mt-1">
-            Multiplies the base subscription before add-ons/discounts.
-          </p>
+          <div className="w-16 text-right tabular-nums">×{subMultiplier.toFixed(2)}</div>
         </div>
-      </CardContent>
-    </Card>
-  </div>
-</Card>
+        <p className="text-xs text-muted-foreground mt-1">
+          Multiplies the base subscription before add-ons/discounts.
+        </p>
+      </div>
+    </CardContent>
+  </Card>
+</div>
+
 
       {/* Totals */}
       <Card>
