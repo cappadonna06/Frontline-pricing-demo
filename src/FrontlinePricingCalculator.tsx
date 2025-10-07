@@ -1238,28 +1238,30 @@ const tableHeader = (
   </div>
 );
 
-  const Row = ({ k }: { k: any }) => (
+const Row = ({ k }: { k: any }) => {
+  const isSelectedRow = String(activeSize) === String(k);
+  return (
     <div
-      className={`${GRID} items-center p-2 rounded-md ${
-        String(activeSize) === String(k) ? "bg-muted ring-1 ring-muted-foreground/20" : ""
+      className={`${GRID} items-center p-2 rounded-md relative transition-all ${
+        isSelectedRow && enabled
+          ? "before:content-[''] before:absolute before:inset-y-1 before:left-0 before:w-1 before:rounded before:bg-emerald-500"
+          : ""
       }`}
     >
-
       <div className="text-xs uppercase tracking-wide text-muted-foreground">{k}</div>
-
-      {/* Fixed-width input — stops the “blob” */}
       <Input
-        className="h-9 w-[120px] text-right tabular-nums"
+        className="h-9 text-right tabular-nums"
         type="number"
         value={costBySize[k] ?? ""}
         onChange={(e) => setCostBySize({ ...costBySize, [k]: Number(e.target.value || 0) })}
       />
-
       <div className="text-right text-sm font-medium tabular-nums whitespace-nowrap">
         {fmtUSD(calcPrice(k))}
       </div>
     </div>
   );
+};
+
 
   return (
     <Card className="p-4 space-y-2">
