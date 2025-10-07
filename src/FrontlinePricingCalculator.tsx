@@ -791,7 +791,7 @@ const aseAnnual = Math.round(aseAnnualRaw * aseMultiplier); // AFTER multiplier
     </Card>
   </div>
 </Card>
-
+</div>
 
       {/* Totals */}
       <Card>
