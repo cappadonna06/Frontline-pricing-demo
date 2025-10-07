@@ -375,13 +375,20 @@ const [adderCost, setAdderCost] = useState({
                   <span className="text-sm text-muted-foreground">({(recalc.gm * 100).toFixed(0)}%)</span>
                 </div>
               </div>
-              <div>
-                <Label>Base System Price (Installed)</Label>
-                <Input type="number" value={recalc.price} onChange={(e) => { setSystemPrice(Number(e.target.value || 0)); setLastEdited("price"); }} />
-                <p className="text-xs text-muted-foreground mt-1">Rounded to nearest $100 is recommended when quoting.</p>
-              </div>
-            </div>
+{/* Price (readout) */}
 <div>
+  <Label>Base System Price (Installed)</Label>
+  <div className="mt-[6px] text-right text-2xl font-semibold tabular-nums">
+    {fmtUSD(recalc.price || 0)}
+  </div>
+  <p className="text-xs text-muted-foreground mt-1">
+    Rounded to nearest $100 is recommended when quoting.
+  </p>
+</div>
+            </div>
+
+            
+  <div>
   <Label className="text-xs text-muted-foreground">System Target GM</Label>
   <div className="flex items-center gap-3 mt-1">
     <div className="w-full max-w-xs">
