@@ -18,6 +18,7 @@ import { ChevronDown, ChevronUp, Info, RefreshCcw } from "lucide-react";
 const fmtUSD = (n: number) => (isFinite(n) ? n.toLocaleString(undefined, { style: "currency", currency: "USD", maximumFractionDigits: 0 }) : "—");
 const clamp = (v: number, min: number, max: number) => Math.max(min, Math.min(max, v));
 const approxEq = (a: number, b: number, tol = 1e-6) => Math.abs(a - b) <= tol;
+const TOGGLE_CLASS = "h-5 w-5 shrink-0"; // ~20px, consistent across cards
 
 // -----------------------------
 // Canonical reference data (from pricing guide)
@@ -482,14 +483,23 @@ const [adderCost, setAdderCost] = useState({
             />
 
             {/* Solar */}
-            <Card className="p-4">
-              <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Type: <span className="font-semibold">Universal</span></div>
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <div className="font-medium">Solar Backup</div>
-                  <div className="text-xs text-muted-foreground">{ADDER_NOTES.solar}</div>
-                </div>
-                <Checkbox checked={includeSolar} onCheckedChange={setIncludeSolar} aria-label="Include Solar Backup" />
+<Card className="p-4 relative">
+  <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
+    Type: <span className="font-semibold">Universal</span>
+  </div>
+
+  {/* Toggle – pinned top-right */}
+  <Checkbox
+    checked={includeSolar}
+    onCheckedChange={setIncludeSolar}
+    aria-label="Include Solar Backup"
+    className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
+  />
+
+  <div className="mb-2">
+    <div className="font-medium leading-tight">Solar Backup</div>
+    <div className="text-xs text-muted-foreground">Universal (no size)</div>
+  </div>
 
 
 
@@ -507,15 +517,23 @@ const [adderCost, setAdderCost] = useState({
             </Card>
 
             {/* UPS */}
-            <Card className="p-4">
-              <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">Type: <span className="font-semibold">Universal</span></div>
-              <div className="flex items-center justify-between mb-2">
-                <div>
-                  <div className="font-medium">UPS (8‑Day)</div>
-                  <div className="text-xs text-muted-foreground">{ADDER_NOTES.ups}</div>
-                </div>
-                <Checkbox checked={includeUPS} onCheckedChange={setIncludeUPS} aria-label="Include UPS (8-Day)" />
-              </div>
+<Card className="p-4 relative">
+  <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
+    Type: <span className="font-semibold">Universal</span>
+  </div>
+
+  {/* Toggle – pinned top-right */}
+  <Checkbox
+    checked={includeUPS}
+    onCheckedChange={setIncludeUPS}
+    aria-label="Include UPS (8-Day)"
+    className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
+  />
+
+  <div className="mb-2">
+    <div className="font-medium leading-tight">UPS (8-Day)</div>
+    <div className="text-xs text-muted-foreground">Universal (no size)</div>
+  </div>
               <div className="space-y-2">
                 <div className="grid grid-cols-2 gap-2 text-xs font-medium text-muted-foreground">
                   <div>Cost</div>
@@ -992,15 +1010,21 @@ function AdderBlock({
 }) {
   const GRID = "grid grid-cols-[30px,68px,68px] gap-1"; // Size | Cost | Price
 
-  const header = (
-    <div className="flex items-center justify-between mb-2">
-      <div>
-        <div className="font-medium">{title}</div>
-        <div className="text-xs text-muted-foreground">{note}</div>
-      </div>
-      <Checkbox checked={enabled} onCheckedChange={onToggle} aria-label={`Include ${title}`} />
+const header = (
+  <div className="flex items-start justify-between mb-2">
+    <div>
+      <div className="font-medium leading-tight">{title}</div>
+      <div className="text-xs text-muted-foreground">{note}</div>
     </div>
-  );
+    <Checkbox
+      checked={enabled}
+      onCheckedChange={onToggle}
+      aria-label={`Include ${title}`}
+      className={TOGGLE_CLASS}
+    />
+  </div>
+);
+
 
   const sizeSelector = (
     <div>
