@@ -1205,17 +1205,21 @@ const header = (
         value={String(activeSize)}
         onValueChange={(v) => onSelectSize(v as any)}
       >
-        {sizes.map((s) => (
-          <label
-            key={s}
-            className={`border rounded-md px-2 py-1 text-center text-xs cursor-pointer ${
-              activeSize === s ? "bg-primary/10 border-primary" : "hover:bg-muted"
-            }`}
-          >
-            <RadioGroupItem value={String(s)} className="sr-only" />
-            {s}
-          </label>
-        ))}
+{sizes.map((s) => (
+  <label
+    key={s}
+    className={
+      "border rounded-md px-2 py-1 text-center text-xs cursor-pointer transition-all " +
+      (activeSize === s
+        ? "bg-emerald-50 border-emerald-400 text-emerald-900"
+        : "hover:bg-muted border-gray-200")
+    }
+  >
+    <RadioGroupItem value={String(s)} className="sr-only" />
+    {s}
+  </label>
+))}
+
       </RadioGroup>
       <div className="text-[11px] text-muted-foreground mt-1">Clear override to follow recommendation.</div>
       <div className="mt-1">
