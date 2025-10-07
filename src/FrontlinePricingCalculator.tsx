@@ -430,13 +430,7 @@ const [adderCost, setAdderCost] = useState({
 
       
       {/* Adders */}
-<Card
-  className={`p-4 relative transition-all duration-200 border rounded-xl ${
-    isEnabled
-      ? "border-emerald-300 bg-emerald-50/40 shadow-[0_0_0_1px_rgba(16,185,129,0.15)]"
-      : "border-gray-200 bg-white"
-  }`}
->
+<Card>
         <CardHeader>
           <CardTitle>System adders</CardTitle>
           <p className="text-xs text-muted-foreground">Size follows system by default; override below.</p>
