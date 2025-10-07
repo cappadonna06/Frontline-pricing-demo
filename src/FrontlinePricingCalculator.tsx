@@ -1205,20 +1205,25 @@ const header = (
         value={String(activeSize)}
         onValueChange={(v) => onSelectSize(v as any)}
       >
-{sizes.map((s) => (
-  <label
-    key={s}
-    className={
-      "border rounded-md px-2 py-1 text-center text-xs cursor-pointer transition-all " +
-      (activeSize === s
-        ? "bg-emerald-50 border-emerald-400 text-emerald-900"
-        : "hover:bg-muted border-gray-200")
-    }
-  >
-    <RadioGroupItem value={String(s)} className="sr-only" />
-    {s}
-  </label>
-))}
+{sizes.map((s) => {
+  const isActive = String(activeSize) === String(s);
+  const activeGreen = "border-emerald-400 text-emerald-900";
+  const activeNeutral = "bg-primary/10 border-primary"; // your old highlight
+  return (
+    <label
+      key={s}
+      className={
+        "border rounded-md px-2 py-1 text-center text-xs cursor-pointer transition-colors " +
+        (isActive
+          ? (enabled ? activeGreen : activeNeutral)
+          : "hover:bg-muted border-gray-200")
+      }
+    >
+      <RadioGroupItem value={String(s)} className="sr-only" />
+      {s}
+    </label>
+  );
+})}
 
       </RadioGroup>
       <div className="text-[11px] text-muted-foreground mt-1">Clear override to follow recommendation.</div>
