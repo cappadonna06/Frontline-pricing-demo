@@ -691,62 +691,80 @@ subMonthly = Math.round(subMonthly * 100) / 100;
   </Card>
 
   {/* Subscription */}
-  <Card>
-    <CardHeader>
-      <CardTitle>Subscription (Connectivity / App / OTA)</CardTitle>
-    </CardHeader>
+ {/* Subscription */}
+<Card>
+  <CardHeader>
+    <CardTitle>Subscription (Connectivity / App / OTA)</CardTitle>
+  </CardHeader>
 
-    <CardContent className="space-y-3">
-      {/* Switches */}
-      <div className="grid grid-cols-2 gap-3">
-        <div className="flex items-center justify-between gap-2 col-span-2">
-          <div>
-            <Label>High-Usage Add-On (+$20)</Label>
-            <p className="text-xs text-muted-foreground">
-              For cell-primary or satellite systems
-            </p>
-          </div>
-          <Switch checked={isHighUsage} onCheckedChange={setIsHighUsage} />
+  <CardContent className="space-y-3">
+    {/* Switches */}
+    <div className="grid grid-cols-2 gap-3">
+      <div className="flex items-center justify-between gap-2 col-span-2">
+        <div>
+          <Label>High-Usage Add-On (+$20)</Label>
+          <p className="text-xs text-muted-foreground">
+            For cell-primary or satellite systems
+          </p>
         </div>
-
-        <div className="flex items-center justify-between gap-2 col-span-2">
-          <div className="flex items-center gap-2">
-            <Switch checked={annualBilling} onCheckedChange={setAnnualBilling} />
-            <span className="text-sm">Annual billing (–10%)</span>
-          </div>
-          <div className="text-sm">
-            Base: {family} @ {fmtUSD(SUB_BASE[family])}/mo
-          </div>
-        </div>
+        {/* Lock size + cast boolean */}
+        <Switch
+          className="h-6 w-11"
+          checked={isHighUsage}
+          onCheckedChange={(v: boolean) => setIsHighUsage(!!v)}
+        />
       </div>
 
-      {/* Total */}
-      <div className="flex justify-between border-t pt-2 font-medium">
-        <span>Total Subscription (Monthly)</span>
-        <span>{fmtUSD(subMonthly)}</span>
-      </div>
-
-      {/* Slider at bottom */}
-      <div className="pt-1">
-        <Label className="text-xs text-muted-foreground">Subscription Multiplier</Label>
-        <div className="flex items-center gap-3 mt-1">
-          <div className="w-full max-w-xs">
-            <Slider
-              value={[subMultiplier]}
-              min={0.5}
-              max={2}
-              step={0.05}
-              onValueChange={([v]) => setSubMultiplier(Number(v.toFixed(2)))}
-            />
-          </div>
-          <div className="w-16 text-right tabular-nums">×{subMultiplier.toFixed(2)}</div>
+      <div className="flex items-center justify-between gap-2 col-span-2">
+        <div className="flex items-center gap-2">
+          {/* Lock size + cast boolean */}
+          <Switch
+            className="h-6 w-11"
+            checked={annualBilling}
+            onCheckedChange={(v: boolean) => setAnnualBilling(!!v)}
+          />
+          <span className="text-sm">Annual billing (–10%)</span>
         </div>
-        <p className="text-xs text-muted-foreground mt-1">
-          Multiplies the base subscription before add-ons/discounts.
-        </p>
+        <div className="text-sm">
+          Base: {family} @ {fmtUSD(SUB_BASE[family])}/mo
+        </div>
       </div>
-    </CardContent>
-  </Card>
+    </div>
+
+    {/* Total */}
+    <div className="flex items-baseline justify-between border-t pt-2">
+      <span className="font-medium">Total Subscription (Monthly)</span>
+      <div className="text-right">
+        <div className="font-medium">{fmtUSD(subMonthly)}</div>
+        {/* Informational yearly */}
+        <div className="text-xs text-muted-foreground">
+          ≈ {fmtUSD(Math.round(subMonthly * 12))} / yr
+        </div>
+      </div>
+    </div>
+
+    {/* Slider at bottom */}
+    <div className="pt-1">
+      <Label className="text-xs text-muted-foreground">Subscription Multiplier</Label>
+      <div className="flex items-center gap-3 mt-1">
+        <div className="w-full max-w-xs">
+          <Slider
+            value={[subMultiplier]}
+            min={0.5}
+            max={2}
+            step={0.05}
+            onValueChange={([v]) => setSubMultiplier(Number(v.toFixed(2)))}
+          />
+        </div>
+        <div className="w-16 text-right tabular-nums">×{subMultiplier.toFixed(2)}</div>
+      </div>
+      <p className="text-xs text-muted-foreground mt-1">
+        Multiplies the base subscription before add-ons/discounts.
+      </p>
+    </div>
+  </CardContent>
+</Card>
+
 </div>
 
 
