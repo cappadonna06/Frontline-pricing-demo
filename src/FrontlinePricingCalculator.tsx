@@ -533,7 +533,11 @@ const [adderCost, setAdderCost] = useState({
 
 
 {/* UPS */}
-<Card className="p-4 relative">
+<Card
+  className={`p-4 relative transition-all duration-200 border ${
+    includeUPS ? "border-emerald-400 shadow-sm" : "border-gray-200"
+  }`}
+>
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
     Type: <span className="font-semibold">Universal</span>
   </div>
@@ -541,12 +545,12 @@ const [adderCost, setAdderCost] = useState({
   <Checkbox
     checked={includeUPS}
     onCheckedChange={setIncludeUPS}
-    aria-label="Include UPS (8-Day)"
+    aria-label="Include Large UPS"
     className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
   />
 
   <div className="mb-2">
-    <div className="font-medium leading-tight">UPS (8-Day)</div>
+    <div className="font-medium leading-tight">Large UPS</div>
     <div className="text-xs text-muted-foreground">Universal (no size)</div>
   </div>
 
@@ -560,7 +564,12 @@ const [adderCost, setAdderCost] = useState({
         aria-label="UPS Cost"
         type="number"
         value={adderCost.ups.flat}
-        onChange={(e) => setAdderCost((s) => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))}
+        onChange={(e) =>
+          setAdderCost((s) => ({
+            ...s,
+            ups: { flat: Number(e.target.value || 0) },
+          }))
+        }
         className="text-right"
       />
       <div className="text-right text-sm font-medium tabular-nums">
@@ -569,6 +578,7 @@ const [adderCost, setAdderCost] = useState({
     </div>
   </div>
 </Card>
+
 
 {/* CLOSE the 5-col grid */}
 </div>
