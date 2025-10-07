@@ -428,28 +428,58 @@ const [adderCost, setAdderCost] = useState({
       </div>
 
       {/* Adders */}
-      <Card>
-        <CardHeader>
-          <CardTitle>System adders</CardTitle>
-          <p className="text-xs text-muted-foreground">Size follows system by default; override below.</p>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="grid md:grid-cols-5 gap-4">
-            {/* Foam */}
-            <AdderBlock
-              title="Foam System"
-              note={ADDER_NOTES.foam}
-              typeLabel="Universal"
-              enabled={includeFoam}
-              onToggle={setIncludeFoam}
-              recommendedSize={systemSizeKey}
-              activeSize={foamActiveSize}
-              onSelectSize={setFoamSize}
-              sizes={["S","M","L","XL"]}
-              costBySize={adderCost.foam}
-              setCostBySize={(v: any) => setAdderCost((s) => ({ ...s, foam: v }))}
-              calcPrice={(k: any) => priceFromGM((adderCost.foam as any)[k], adderGM)}
-            />
+     {/* Foam */}
+<Card
+  className={`p-4 relative transition-all duration-200 border ${
+    includeFoam ? "border-emerald-400 shadow-sm" : "border-gray-200"
+  }`}
+>
+  <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
+    Type: <span className="font-semibold">MP3 / LV2</span>
+  </div>
+
+  <Checkbox
+    checked={includeFoam}
+    onCheckedChange={setIncludeFoam}
+    aria-label="Include Foam"
+    className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
+  />
+
+  <div className="mb-2">
+    <div className="font-medium leading-tight">Foam System</div>
+    <div className="text-xs text-muted-foreground">Applies to both MP3 and LV2 systems</div>
+  </div>
+
+  <div className="space-y-2">
+    <div className="grid grid-cols-3 gap-2 text-xs font-medium text-muted-foreground">
+      <div>Size</div>
+      <div>Cost</div>
+      <div className="text-right">Price</div>
+    </div>
+
+    {["S", "M", "L", "XL"].map((k) => (
+      <div key={k} className="grid grid-cols-3 gap-2 items-center">
+        <div className="text-xs uppercase">{k}</div>
+        <Input
+          aria-label={`Foam ${k} Cost`}
+          type="number"
+          value={adderCost.foam[k]}
+          onChange={(e) =>
+            setAdderCost((s) => ({
+              ...s,
+              foam: { ...s.foam, [k]: Number(e.target.value || 0) },
+            }))
+          }
+          className="text-right"
+        />
+        <div className="text-right text-sm font-medium tabular-nums">
+          {fmtUSD(priceFromGM(adderCost.foam[k], adderGM))}
+        </div>
+      </div>
+    ))}
+  </div>
+</Card>
+
 
             {/* Booster */}
             <AdderBlock
