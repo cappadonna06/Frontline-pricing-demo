@@ -1238,10 +1238,12 @@ const tableHeader = (
   </div>
 );
 
-const Row = ({ k }: { k: any }) => (
-  <div className={`grid grid-cols-3 items-center gap-2 p-2 rounded-md ${String(activeSize) === String(k) ? "bg-muted ring-1 ring-muted-foreground/20" : ""}`}>
-
->
+  const Row = ({ k }: { k: any }) => (
+    <div
+      className={`${GRID} items-center p-2 rounded-md ${
+        String(activeSize) === String(k) ? "bg-muted ring-1 ring-muted-foreground/20" : ""
+      }`}
+    >
 
       <div className="text-xs uppercase tracking-wide text-muted-foreground">{k}</div>
 
