@@ -483,14 +483,12 @@ const [adderCost, setAdderCost] = useState({
               calcPrice={(k: any) => priceFromGM(adderCost.pool[family][k], adderGM)}
             />
 
-            {/* Solar */}
-           <Card className="p-4 relative">
-  {/* Type row (matches other cards) */}
+           {/* Solar */}
+<Card className="p-4 relative">
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
     Type: <span className="font-semibold">Universal</span>
   </div>
 
-  {/* Toggle – pinned top-right, consistent size */}
   <Checkbox
     checked={includeSolar}
     onCheckedChange={setIncludeSolar}
@@ -498,13 +496,11 @@ const [adderCost, setAdderCost] = useState({
     className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
   />
 
-  {/* Title + subtitle */}
   <div className="mb-2">
     <div className="font-medium leading-tight">Solar Backup</div>
     <div className="text-xs text-muted-foreground">Universal (no size)</div>
   </div>
 
-  {/* Cost / Price */}
   <div className="space-y-2">
     <div className="grid grid-cols-2 gap-2 text-xs font-medium text-muted-foreground">
       <div>Cost</div>
@@ -515,9 +511,7 @@ const [adderCost, setAdderCost] = useState({
         aria-label="Solar Cost"
         type="number"
         value={adderCost.solar.flat}
-        onChange={(e) =>
-          setAdderCost((s) => ({ ...s, solar: { flat: Number(e.target.value || 0) } }))
-        }
+        onChange={(e) => setAdderCost((s) => ({ ...s, solar: { flat: Number(e.target.value || 0) } }))}
         className="text-right"
       />
       <div className="text-right text-sm font-medium tabular-nums">
@@ -527,15 +521,12 @@ const [adderCost, setAdderCost] = useState({
   </div>
 </Card>
 
-
-            {/* UPS */}
-          <Card className="p-4 relative">
-  {/* Type row (matches other cards) */}
+{/* UPS */}
+<Card className="p-4 relative">
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
     Type: <span className="font-semibold">Universal</span>
   </div>
 
-  {/* Toggle – pinned top-right, consistent size */}
   <Checkbox
     checked={includeUPS}
     onCheckedChange={setIncludeUPS}
@@ -543,13 +534,11 @@ const [adderCost, setAdderCost] = useState({
     className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
   />
 
-  {/* Title + subtitle */}
   <div className="mb-2">
     <div className="font-medium leading-tight">UPS (8-Day)</div>
     <div className="text-xs text-muted-foreground">Universal (no size)</div>
   </div>
 
-  {/* Cost / Price */}
   <div className="space-y-2">
     <div className="grid grid-cols-2 gap-2 text-xs font-medium text-muted-foreground">
       <div>Cost</div>
@@ -560,9 +549,7 @@ const [adderCost, setAdderCost] = useState({
         aria-label="UPS Cost"
         type="number"
         value={adderCost.ups.flat}
-        onChange={(e) =>
-          setAdderCost((s) => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))
-        }
+        onChange={(e) => setAdderCost((s) => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))}
         className="text-right"
       />
       <div className="text-right text-sm font-medium tabular-nums">
@@ -571,6 +558,42 @@ const [adderCost, setAdderCost] = useState({
     </div>
   </div>
 </Card>
+
+{/* CLOSE the 5-col grid */}
+</div>
+
+{/* Adder GM + Subtotal */}
+<div className="grid md:grid-cols-3 gap-4 items-start">
+  <div>
+    <Label>Adder Target GM</Label>
+    <div className="flex items-center gap-3 mt-1">
+      <Slider
+        value={[adderGM]}
+        min={0.3}
+        max={0.7}
+        step={0.01}
+        onValueChange={([v]) => setAdderGM(Number(v.toFixed(2)))}
+      />
+      <div className="w-12 text-right tabular-nums">{Math.round(adderGM * 100)}%</div>
+    </div>
+    <p className="text-xs text-muted-foreground mt-1">
+      Applies to all adder costs (Foam/Booster/Pool/Solar/UPS).
+    </p>
+  </div>
+
+  <div className="md:col-span-2 grid grid-cols-2 gap-4">
+    <SummaryRow label="Foam System" value={includeFoam ? fmtUSD(foamPrice) : "—"} />
+    <SummaryRow label="Booster Pump" value={includeBooster ? fmtUSD(boosterPrice) : "—"} />
+    <SummaryRow label="Pool/Draft Kit" value={includePool ? fmtUSD(poolPrice) : "—"} />
+    <SummaryRow label="Solar Backup" value={includeSolar ? fmtUSD(solarPrice) : "—"} />
+    <SummaryRow label="UPS (8-Day)" value={includeUPS ? fmtUSD(upsPrice) : "—"} />
+    <SummaryRow label="Adders Subtotal" value={fmtUSD(addersTotal)} bold />
+  </div>
+</div>
+{/* CLOSE CardContent + Card for Adders */}
+</CardContent>
+</Card>
+
 
 
       {/* ASE & Subscription */}
