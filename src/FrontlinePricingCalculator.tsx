@@ -127,6 +127,8 @@ const [adderCost, setAdderCost] = useState({
   ups: { flat: 900 },
 });
 
+  // ASE multiplier for base + adders
+const [aseMultiplier, setAseMultiplier] = useState<number>(1);
 
   // ASE adder increments — STATE (editable via table)
   const [ASE_ADDERS, setASE_ADDERS] = useState(initialASEAdders);
@@ -179,13 +181,22 @@ const [adderCost, setAdderCost] = useState({
 
   const addersTotal = foamPrice + boosterPrice + poolPrice + solarPrice + upsPrice;
 
-  // -----------------------------
-  // ASE (annual)
-  // -----------------------------
-  const aseBase = ASE_BASE[family][systemSizeKey];
-  const aseAdderTable = ASE_ADDERS[family][systemSizeKey];
-  const aseAddersSum = (includeFoam ? aseAdderTable.foam : 0) + (includeBooster ? aseAdderTable.booster : 0) + (includePool ? aseAdderTable.pool : 0) + (includeSolar ? aseAdderTable.solar : 0);
-  const aseAnnual = aseBase + aseAddersSum;
+
+// -----------------------------
+// ASE (annual)
+// -----------------------------
+const aseBase = ASE_BASE[family][systemSizeKey];
+const aseAdderTable = ASE_ADDERS[family][systemSizeKey];
+
+const aseAddersSum =
+  (includeFoam ? aseAdderTable.foam : 0) +
+  (includeBooster ? aseAdderTable.booster : 0) +
+  (includePool ? aseAdderTable.pool : 0) +
+  (includeSolar ? aseAdderTable.solar : 0);
+
+const aseAnnualRaw = aseBase + aseAddersSum;          // before multiplier
+const aseAnnual = Math.round(aseAnnualRaw * aseMultiplier); // AFTER multiplier
+
 
   // -----------------------------
   // Subscription (monthly)
@@ -621,26 +632,63 @@ const [adderCost, setAdderCost] = useState({
 
       {/* ASE & Subscription */}
       <div className="grid md:grid-cols-2 gap-4">
-        <Card>
-          <CardHeader>
-            <CardTitle>ASE (Annual Service & Extension)</CardTitle>
-            <p className="text-xs text-muted-foreground">Service adders are editable below and sync live with these totals.</p>
-          </CardHeader>
-          <CardContent className="space-y-2">
-            <div className="grid grid-cols-2 gap-2 text-sm">
-              <SummaryRow label={`Base (${family}-${size})`} value={fmtUSD(aseBase)} />
-              {includeFoam && <SummaryRow label="Foam adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].foam)} />}
-              {includeBooster && <SummaryRow label="Booster adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].booster)} />}
-              {includePool && <SummaryRow label="Pool/Draft adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].pool)} />}
-              {includeSolar && <SummaryRow label="Solar adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].solar)} />}
-            </div>
-            <div className="flex justify-between border-t pt-2 font-medium">
-              <span>Total (Annual)</span>
-              <span>{fmtUSD(aseAnnual)}</span>
-            </div>
-            <p className="text-xs text-muted-foreground">ASE adders mirror selected hardware adders (Foam/Booster/Pool/Solar). UPS does not affect ASE.</p>
-          </CardContent>
-        </Card>
+     <Card>
+  <CardHeader>
+    <CardTitle>ASE (Annual Service & Extension)</CardTitle>
+    <p className="text-xs text-muted-foreground">
+      Service adders are editable below and sync live with these totals.
+    </p>
+  </CardHeader>
+
+  <CardContent className="space-y-2">
+    {/* ASE Multiplier */}
+    <div className="grid md:grid-cols-[1fr,auto] items-center gap-3 mb-2">
+      <div>
+        <Label>ASE Multiplier</Label>
+        <div className="flex items-center gap-3 mt-1">
+          <div className="w-full max-w-xs">
+            <Slider
+              value={[aseMultiplier]}
+              min={0.5}
+              max={2}
+              step={0.05}
+              onValueChange={([v]) => setAseMultiplier(Number(v.toFixed(2)))}
+            />
+          </div>
+          <div className="w-16 text-right tabular-nums">×{aseMultiplier.toFixed(2)}</div>
+        </div>
+        <p className="text-xs text-muted-foreground mt-1">
+          Applies to ASE base and all ASE adders.
+        </p>
+      </div>
+
+      {/* Optional helper: show pre-multiplied total */}
+      <div className="text-right text-sm text-muted-foreground">
+        Pre-multiplied: {fmtUSD(aseAnnualRaw)}
+      </div>
+    </div>
+
+    {/* Existing breakdown (unchanged) */}
+    <div className="grid grid-cols-2 gap-2 text-sm">
+      <SummaryRow label={`Base (${family}-${size})`} value={fmtUSD(aseBase)} />
+      {includeFoam && <SummaryRow label="Foam adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].foam)} />}
+      {includeBooster && <SummaryRow label="Booster adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].booster)} />}
+      {includePool && <SummaryRow label="Pool/Draft adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].pool)} />}
+      {includeSolar && <SummaryRow label="Solar adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].solar)} />}
+    </div>
+
+    {/* This row now shows the multiplied total */}
+    <div className="flex justify-between border-t pt-2 font-medium">
+      <span>Total (Annual)</span>
+      <span>{fmtUSD(aseAnnual)}</span>
+    </div>
+
+    <p className="text-xs text-muted-foreground">
+      ASE adders mirror selected hardware adders (Foam/Booster/Pool/Solar). UPS does not affect ASE.
+    </p>
+  </CardContent>
+</Card>
+
 
         <Card>
           <CardHeader>
