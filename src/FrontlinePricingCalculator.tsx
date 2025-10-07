@@ -364,10 +364,22 @@ const [adderCost, setAdderCost] = useState({
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="grid md:grid-cols-3 gap-4">
-              <div>
-                <Label>System Cost (COGS)</Label>
-                <Input type="number" value={recalc.cost} onChange={(e) => { setSystemCost(Number(e.target.value || 0)); setLastEdited("cost"); }} />
-              </div>
+{/* Cost */}
+<div>
+  <Label>System Cost (COGS)</Label>
+  <Input
+    type="number"
+    value={recalc.cost}
+    onChange={(e) => {
+      setSystemCost(Number(e.target.value || 0));
+      setLastEdited("cost");
+    }}
+  />
+  <p className="text-xs text-muted-foreground mt-1">
+    System cost input from cost model; does not include adders (see below).
+  </p>
+</div>
+
               <div>
                 <Label>Target GM</Label>
                 <div className="flex items-center gap-2">
