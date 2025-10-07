@@ -66,10 +66,7 @@ const ADDER_NOTES = {
   solar: "Universal (no size)",
   ups: "Universal (no size)",
 };
-
-const TOGGLE_CLASS =
-  "h-5 w-5 rounded-md border-gray-300 " +
-  "data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500";
+const TOGGLE_CLASS = "h-5 w-5 shrink-0";
 
 
 // -----------------------------
@@ -536,11 +533,7 @@ const [adderCost, setAdderCost] = useState({
 
 
 {/* UPS */}
-<Card
-  className={`p-4 relative transition-all duration-200 border ${
-    includeUPS ? "border-emerald-400 shadow-sm" : "border-gray-200"
-  }`}
->
+<Card className="p-4 relative">
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
     Type: <span className="font-semibold">Universal</span>
   </div>
@@ -553,7 +546,7 @@ const [adderCost, setAdderCost] = useState({
   />
 
   <div className="mb-2">
-    <div className="font-medium">UPS (8-Day)</div>
+    <div className="font-medium leading-tight">UPS (8-Day)</div>
     <div className="text-xs text-muted-foreground">Universal (no size)</div>
   </div>
 
@@ -567,9 +560,7 @@ const [adderCost, setAdderCost] = useState({
         aria-label="UPS Cost"
         type="number"
         value={adderCost.ups.flat}
-        onChange={(e) =>
-          setAdderCost((s) => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))
-        }
+        onChange={(e) => setAdderCost((s) => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))}
         className="text-right"
       />
       <div className="text-right text-sm font-medium tabular-nums">
@@ -578,7 +569,6 @@ const [adderCost, setAdderCost] = useState({
     </div>
   </div>
 </Card>
-
 
 {/* CLOSE the 5-col grid */}
 </div>
@@ -1059,6 +1049,22 @@ function AdderBlock({
 }) {
   const GRID = "grid grid-cols-[30px,68px,68px] gap-1"; // Size | Cost | Price
 
+const header = (
+  <div className="flex items-start justify-between mb-2">
+    <div>
+      <div className="font-medium leading-tight">{title}</div>
+      <div className="text-xs text-muted-foreground">{note}</div>
+    </div>
+    <Checkbox
+      checked={enabled}
+      onCheckedChange={onToggle}
+      aria-label={`Include ${title}`}
+      className={TOGGLE_CLASS}
+    />
+  </div>
+);
+
+
   const sizeSelector = (
     <div>
       <div className="text-[11px] text-muted-foreground">
@@ -1090,13 +1096,13 @@ function AdderBlock({
     </div>
   );
 
-  const tableHeader = (
-    <div className={`${GRID} text-xs font-medium text-muted-foreground`}>
-      <div className="justify-self-start">Size</div>
-      <div className="justify-self-center">Cost</div>
-      <div className="justify-self-end text-right">Price</div>
-    </div>
-  );
+const tableHeader = (
+  <div className={`${GRID} text-xs font-medium text-muted-foreground`}>
+    <div className="justify-self-start">Size</div>
+    <div className="justify-self-center">Cost</div>
+    <div className="justify-self-end text-right">Price</div>
+  </div>
+);
 
   const Row = ({ k }: { k: any }) => (
     <div
@@ -1105,12 +1111,15 @@ function AdderBlock({
       }`}
     >
       <div className="text-xs uppercase tracking-wide text-muted-foreground">{k}</div>
+
+      {/* Fixed-width input — stops the “blob” */}
       <Input
         className="h-9 w-[120px] text-right tabular-nums"
         type="number"
         value={costBySize[k] ?? ""}
         onChange={(e) => setCostBySize({ ...costBySize, [k]: Number(e.target.value || 0) })}
       />
+
       <div className="text-right text-sm font-medium tabular-nums whitespace-nowrap">
         {fmtUSD(calcPrice(k))}
       </div>
@@ -1118,19 +1127,7 @@ function AdderBlock({
   );
 
   return (
-    <Card
-      className={`p-4 space-y-2 relative transition-all duration-200 border ${
-        enabled ? "border-emerald-400 shadow-sm" : "border-gray-200"
-      }`}
-    >
-      {/* top-right checkbox (consistent look/position) */}
-      <Checkbox
-        checked={enabled}
-        onCheckedChange={onToggle}
-        aria-label={`Include ${title}`}
-        className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
-      />
-
+    <Card className="p-4 space-y-2">
       <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
         Type: <span className="font-semibold">{typeLabel}</span>{" "}
         {activeSize !== recommendedSize ? (
@@ -1140,11 +1137,7 @@ function AdderBlock({
         )}
       </div>
 
-      <div className="mb-2">
-        <div className="font-medium leading-tight">{title}</div>
-        <div className="text-xs text-muted-foreground">{note}</div>
-      </div>
-
+      {header}
       {sizeSelector}
 
       <div className="mt-2 space-y-1">
@@ -1156,4 +1149,3 @@ function AdderBlock({
     </Card>
   );
 }
-
