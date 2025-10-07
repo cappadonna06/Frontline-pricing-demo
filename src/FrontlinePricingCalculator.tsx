@@ -503,19 +503,20 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
               calcPrice={(k: any) => priceFromGM(adderCost.pool[family][k], adderGM)}
             />
 
-           {/* Solar */}
+         {/* Solar */}
 <Card
   className={`p-4 relative transition-all duration-200 border ${
-    includeSolar ? "border-emerald-400 shadow-sm" : "border-gray-200"
+    includeSolar ? "border-emerald-400 bg-emerald-50/30 shadow-sm" : "border-gray-200"
   }`}
 >
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
     Type: <span className="font-semibold">Universal</span>
   </div>
 
+  {/* Toggle (coerce Radix value to boolean) */}
   <Checkbox
     checked={includeSolar}
-    onCheckedChange={setIncludeSolar}
+    onCheckedChange={(v) => setIncludeSolar(v === true)}
     aria-label="Include Solar Backup"
     className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
   />
@@ -552,10 +553,11 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
 
 
 
+
 {/* UPS */}
 <Card
-  className={`p-4 relative transition-all duration-200 border ${
-    includeUPS ? "border-emerald-400 shadow-sm" : "border-gray-200"
+  className={`p-4 relative transition-colors border ${
+    includeUPS ? "border-emerald-400 bg-emerald-50/30" : "border-gray-200"
   }`}
 >
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
@@ -564,13 +566,13 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
 
   <Checkbox
     checked={includeUPS}
-    onCheckedChange={setIncludeUPS}
-    aria-label="Include Large UPS"
+    onCheckedChange={(v) => setIncludeUPS(v === true)}   // <-- force boolean
+    aria-label="Include UPS (8-Day)"
     className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
   />
 
   <div className="mb-2">
-    <div className="font-medium leading-tight">Large UPS</div>
+    <div className="font-medium leading-tight">UPS (8-Day)</div>
     <div className="text-xs text-muted-foreground">Universal (no size)</div>
   </div>
 
@@ -585,10 +587,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
         type="number"
         value={adderCost.ups.flat}
         onChange={(e) =>
-          setAdderCost((s) => ({
-            ...s,
-            ups: { flat: Number(e.target.value || 0) },
-          }))
+          setAdderCost((s) => ({ ...s, ups: { flat: Number(e.target.value || 0) } }))
         }
         className="text-right"
       />
@@ -598,6 +597,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
     </div>
   </div>
 </Card>
+
 
 
 {/* CLOSE the 5-col grid */}
