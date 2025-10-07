@@ -135,9 +135,6 @@ const [adderCost, setAdderCost] = useState({
   ups: { flat: 900 },
 });
 
-  // ASE multiplier for base + adders
-const [aseMultiplier, setAseMultiplier] = useState<number>(1);
-
   // ASE adder increments — STATE (editable via table)
   const [ASE_ADDERS, setASE_ADDERS] = useState(initialASEAdders);
 
