@@ -672,9 +672,9 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
   {/* ASE */}
   <Card>
     <CardHeader>
-      <CardTitle>ASE (Annual Service & Extension)</CardTitle>
+      <CardTitle> Annual Service (ASE) </CardTitle>
       <p className="text-xs text-muted-foreground">
-        Service adders are editable below and sync live with these totals.
+        Service contract price adders are editable below and sync live with these totals.
       </p>
     </CardHeader>
 
@@ -686,13 +686,13 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
           <SummaryRow label="Foam adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].foam)} />
         )}
         {includeBooster && (
-          <SummaryRow label="Booster adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].booster)} />
+          <SummaryRow label="Booster pump adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].booster)} />
         )}
         {includePool && (
-          <SummaryRow label="Pool/Draft adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].pool)} />
+          <SummaryRow label="Pool/Draft kit adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].pool)} />
         )}
         {includeSolar && (
-          <SummaryRow label="Solar adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].solar)} />
+          <SummaryRow label="Solar backup adder" value={fmtUSD(ASE_ADDERS[family][systemSizeKey].solar)} />
         )}
       </div>
 
