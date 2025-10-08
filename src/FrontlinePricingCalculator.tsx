@@ -1178,68 +1178,9 @@ const applyGMPreset = (sysGM: number, addGM: number, key?: string) => {
         </CardContent>
       </Card>
 
-      {/* Developer Tests (collapsible) */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle>Developer Tests</CardTitle>
-          <Button variant="outline" size="sm" onClick={() => setShowTests(s=>!s)}>
-            {showTests ? <>Hide</> : <>Show</>}
-          </Button>
-        </CardHeader>
-        {showTests && (
-          <CardContent>
-            <div className="text-sm mb-2">Pass: {passCount} / {tests.length}</div>
-            <div className="space-y-2">
-              {tests.map((t, i) => (
-                <div key={i} className={`rounded-md p-2 border ${t.pass ? 'border-green-300 bg-green-50' : 'border-red-300 bg-red-50'}`}>
-                  <div className="font-medium">{t.name}</div>
-                  {!t.pass && (
-                    <div className="text-xs mt-1">
-                      <div>Expected: <code>{JSON.stringify(t.expected)}</code></div>
-                      <div>Got: <code>{JSON.stringify(t.got)}</code></div>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        )}
-      </Card>
 
-      {/* Collapsible JSON Export */}
-      <div className="flex justify-end">
-        <Button variant="outline" onClick={() => setShowJSON((s) => !s)} className="flex items-center gap-2">
-          {showJSON ? <><ChevronUp className="h-4 w-4"/>Hide JSON</> : <><ChevronDown className="h-4 w-4"/>Show JSON</>}
-        </Button>
-      </div>
-      {showJSON && (
-        <Card>
-          <CardHeader>
-            <CardTitle>Export (JSON)</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <pre className="text-xs bg-muted/40 p-3 rounded-md overflow-auto max-h-64">
-{JSON.stringify({
-  system: { family, size, cost: recalc.cost, gm: Number(recalc.gm.toFixed(3)), price: recalc.price },
-  adders: {
-    foam: includeFoam ? { size: foamActiveSize, cost: foamCost, price: foamPrice } : null,
-    booster: includeBooster ? { size: boosterActiveSize, cost: boosterCost, price: boosterPrice } : null,
-    pool: includePool ? { size: poolActiveSize, cost: poolCost, price: poolPrice } : null,
-    solar: includeSolar ? { cost: solarCost, price: solarPrice } : null,
-    ups: includeUPS ? { cost: upsCost, price: upsPrice } : null,
-    subtotal: addersTotal,
-  },
-  ase: { annual: aseAnnual },
-  subscription: { monthly: subMonthly, vertical: vertical.label, annualBilling },
-  totals: { oneTime: oneTimeTotal },
-}, null, 2)}
-            </pre>
-          </CardContent>
-        </Card>
-      )}
-    </div>
-  );
-}
+
+    
 
 function SummaryRow({ label, value, bold = false }: { label: string; value: React.ReactNode; bold?: boolean }) {
   return (
