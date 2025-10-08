@@ -895,6 +895,92 @@ const applyGMPreset = (sysGM: number, addGM: number, key?: string) => {
   </CardContent>
 </Card>
 
+      {/* 5-Year Cash Flow */}
+<Card>
+  <CardHeader>
+    <CardTitle>5-Year Cash Flow</CardTitle>
+    <p className="text-xs text-muted-foreground">
+      Year 0 shows one-time cash received; Years 1–5 show annual recurring revenue.
+    </p>
+  </CardHeader>
+
+  <CardContent>
+    {(() => {
+      // Annual recurring pulled from existing totals
+      const annualRecurring = Math.round((aseAnnual + subMonthly * 12) * 100) / 100;
+
+      // Build rows: Year 0 (upfront), then Years 1–5 (recurring)
+      const rows: Array<{ year: string; upfront: number; recurring: number; cashIn: number; cumulative: number }> = [];
+      let cumulative = 0;
+
+      // Year 0
+      cumulative += oneTimeTotal;
+      rows.push({
+        year: "Year 0",
+        upfront: oneTimeTotal,
+        recurring: 0,
+        cashIn: oneTimeTotal,
+        cumulative,
+      });
+
+      // Years 1–5
+      for (let y = 1; y <= 5; y++) {
+        const cashIn = annualRecurring;
+        cumulative += cashIn;
+        rows.push({
+          year: `Year ${y}`,
+          upfront: 0,
+          recurring: annualRecurring,
+          cashIn,
+          cumulative,
+        });
+      }
+
+      // Nice compact table
+      return (
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="text-muted-foreground">
+                <th className="py-2 text-left">Year</th>
+                <th className="py-2 text-right">One-Time</th>
+                <th className="py-2 text-right">Recurring</th>
+                <th className="py-2 text-right">Cash In</th>
+                <th className="py-2 text-right">Cumulative</th>
+              </tr>
+            </thead>
+            <tbody>
+              {rows.map((r) => (
+                <tr key={r.year} className="border-t">
+                  <td className="py-2">{r.year}</td>
+                  <td className="py-2 text-right tabular-nums">{r.upfront ? fmtUSD(r.upfront) : "—"}</td>
+                  <td className="py-2 text-right tabular-nums">{r.recurring ? fmtUSD(r.recurring) : "—"}</td>
+                  <td className="py-2 text-right tabular-nums font-medium">{fmtUSD(r.cashIn)}</td>
+                  <td className="py-2 text-right tabular-nums">{fmtUSD(r.cumulative)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
+          {/* Footer summary */}
+          <div className="mt-3 grid grid-cols-2 gap-3">
+            <div className="rounded-md bg-muted/40 px-3 py-2">
+              <div className="text-xs text-muted-foreground">Annual Recurring</div>
+              <div className="font-medium tabular-nums">{fmtUSD(annualRecurring)}</div>
+            </div>
+            <div className="rounded-md bg-muted/40 px-3 py-2">
+              <div className="text-xs text-muted-foreground">5-Year Cumulative</div>
+              <div className="font-medium tabular-nums">
+                {fmtUSD(rows[rows.length - 1].cumulative)}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    })()}
+  </CardContent>
+</Card>
+
 
 
 
