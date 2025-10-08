@@ -377,13 +377,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
           </CardContent>
         </Card>
 
-        {/* Cost / GM / Price */}
-<Card className="md:col-span-2">
-  <CardHeader className="pb-2">
-    <CardTitle>Base System Price — Two-Way Cost ↔ GM ↔ Price</CardTitle>
-  </CardHeader>
-
-  <Card className="md:col-span-2">
+       <Card className="md:col-span-2">
   <CardHeader className="pb-2">
     <CardTitle>Base System Price — Two-Way Cost ↔ GM ↔ Price</CardTitle>
   </CardHeader>
@@ -405,7 +399,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
 
       {/* GM (%) */}
       <div>
-        <Label>Target Gross Margin (%)</Label>
+        <Label>Target GM (%)</Label>
         <Input
           type="number"
           min={0}
@@ -464,6 +458,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
     </div>
   </CardContent>
 </Card>
+
 
 
       </div>
