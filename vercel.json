@@ -1,6 +1,9 @@
 {
   "version": 2,
   "routes": [
-    { "src": "/(.*)", "middlewarePath": "middleware.js" }
+    {
+      "src": "/(.*)",
+      "middlewarePath": "middleware.js"
+    }
   ]
 }
