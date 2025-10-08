@@ -384,40 +384,48 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
 
   <CardContent className="grid gap-4">
     <div className="grid md:grid-cols-3 gap-6 items-end">
-      {/* Cost */}
-      <div>
-        <Label>System Cost (COGS)</Label>
-        <Input
-          type="number"
-          value={systemCost}
-          onChange={(e) => {
-            setSystemCost(Number(e.target.value) || 0);
-            setLastEdited("cost");
-          }}
-        />
-      </div>
+ 
+{/* Cost */}
+<div>
+  <Label>System Cost (COGS)</Label>
+  <Input
+    type="text"
+    inputMode="numeric"
+    value={systemCost === 0 ? "" : systemCost}
+    onChange={(e) => {
+      const val = e.target.value.replace(/[^\d.]/g, ""); // strip non-numerics
+      if (val === "") {
+        setSystemCost(0);
+        setLastEdited("cost");
+        return;
+      }
+      setSystemCost(Number(val));
+      setLastEdited("cost");
+    }}
+  />
+</div>
 
-      {/* GM (%) */}
-      <div>
-        <Label>Target GM (%)</Label>
-        <Input
-          type="number"
-          min={0}
-          max={95}
-          step={1}
-          value={Math.round(targetGM * 100)}
-          onChange={(e) => {
-            const val = e.target.value;
-            if (val === "") {
-              setTargetGM(0);
-              return;
-            }
-            const pct = Math.max(0, Math.min(Number(val), 95));
-            setTargetGM(pct / 100);
-            setLastEdited("gm");
-          }}
-        />
-      </div>
+{/* GM (%) */}
+<div>
+  <Label>Target GM (%)</Label>
+  <Input
+    type="text"
+    inputMode="decimal"
+    value={targetGM === 0 ? "" : Math.round(targetGM * 100)}
+    onChange={(e) => {
+      const val = e.target.value.replace(/[^\d.]/g, "");
+      if (val === "") {
+        setTargetGM(0);
+        setLastEdited("gm");
+        return;
+      }
+      const pct = Math.max(0, Math.min(Number(val), 95));
+      setTargetGM(pct / 100);
+      setLastEdited("gm");
+    }}
+  />
+</div>
+
 
       {/* Price */}
       <div className="text-right">
