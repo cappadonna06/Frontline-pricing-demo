@@ -1,0 +1,11 @@
+{
+  "functions": {
+    "middleware.ts": { "runtime": "edge" }
+  },
+  "routes": [
+    {
+      "src": "/(.*)",
+      "middlewarePath": "middleware"
+    }
+  ]
+}
