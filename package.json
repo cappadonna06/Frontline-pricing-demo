@@ -11,12 +11,15 @@
   "dependencies": {
     "framer-motion": "^10.16.3",
     "lucide-react": "^0.378.0",
+    "mime-types": "^2.1.35",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
   },
   "devDependencies": {
     "@types/react": "^18.2.46",
     "@types/react-dom": "^18.2.18",
+    "@types/node": "^20.12.7",
+    "@types/mime-types": "^2.1.4",
     "@vitejs/plugin-react": "^4.3.1",
     "typescript": "^5.4.5",
     "vite": "^5.2.0"
