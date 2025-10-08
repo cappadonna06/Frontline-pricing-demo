@@ -3,10 +3,16 @@
   "buildCommand": "vite build",
   "outputDirectory": "dist",
   "functions": {
-    "auth.js": { "runtime": "edge" }
+    "auth.js": {
+      "runtime": "vercel-edge@2.8.0"
+    }
   },
   "routes": [
     { "handle": "filesystem" },
-    { "src": "/(.*)", "middlewarePath": "auth", "dest": "/$1" }
+    {
+      "src": "/(.*)",
+      "middlewarePath": "auth",
+      "dest": "/$1"
+    }
   ]
 }
