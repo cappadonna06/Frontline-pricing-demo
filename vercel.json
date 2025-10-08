@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "buildCommand": "vite build",
+  "outputDirectory": "dist",
+  "functions": {
+    "auth.js": { "runtime": "edge" }
+  },
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/(.*)", "middlewarePath": "auth", "dest": "/$1" }
+  ]
+}
