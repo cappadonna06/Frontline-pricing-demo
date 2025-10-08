@@ -836,7 +836,62 @@ const applyGMPreset = (sysGM: number, addGM: number, key?: string) => {
 </Card>
 
 </div>
+{/* Quote Summary */}
+<Card>
+  <CardHeader>
+    <CardTitle>Quote Summary</CardTitle>
+  </CardHeader>
 
+  <CardContent>
+    <div className="grid md:grid-cols-2 gap-8">
+      {/* ONE-TIME */}
+      <section className="flex flex-col justify-between">
+        <div>
+          <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-2">
+            One-Time
+          </div>
+
+          <div className="space-y-2">
+            <SummaryRow label="System Price (Installed)" value={fmtUSD(recalc.price)} />
+            <SummaryRow label="Adders Total" value={fmtUSD(addersTotal)} />
+          </div>
+        </div>
+
+        <div className="flex justify-between border-t pt-3 mt-3 font-semibold text-lg">
+          <span>One-Time Total</span>
+          <span className="tabular-nums">{fmtUSD(oneTimeTotal)}</span>
+        </div>
+      </section>
+
+      {/* RECURRING */}
+      <section className="flex flex-col justify-between">
+        <div>
+          <div className="text-[11px] uppercase tracking-wide text-muted-foreground mb-2">
+            Recurring
+          </div>
+
+          <div className="space-y-2">
+            <SummaryRow label="ASE (Annual)" value={fmtUSD(aseAnnual)} />
+            <div className="flex items-baseline justify-between">
+              <span className="text-sm text-muted-foreground">Subscription</span>
+              <div className="text-right">
+                <div className="tabular-nums">{fmtUSD(subMonthly)}/mo</div>
+                <div className="text-xs text-muted-foreground tabular-nums">
+                  ≈ {fmtUSD(subAnnual)} / yr
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-between border-t pt-3 mt-3 font-semibold text-lg">
+          <span>Annual Recurring Total</span>
+          <span className="tabular-nums">{fmtUSD(recurringAnnual)}</span>
+        </div>
+      </section>
+    </div>
+  </CardContent>
+</Card>
 
  {/* 5-Year Cash Flow */}
 <Card>
