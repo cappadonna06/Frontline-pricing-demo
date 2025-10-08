@@ -93,7 +93,7 @@ export default function FrontlinePricingCalculator() {
   const [annualBilling, setAnnualBilling] = useState<boolean>(false); // –10% if true
 
   // Adder selections
-  const [includeFoam, setIncludeFoam] = useState<boolean>(true);
+  const [includeFoam, setIncludeFoam] = useState<boolean>(false);
   const [includeBooster, setIncludeBooster] = useState<boolean>(false);
   const [includePool, setIncludePool] = useState<boolean>(false);
   const [includeSolar, setIncludeSolar] = useState<boolean>(false);
@@ -239,7 +239,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
     setVerticalKey("res");
     setIsHighUsage(false);
     setAnnualBilling(false);
-    setIncludeFoam(true);
+    setIncludeFoam(false);
     setIncludeBooster(false);
     setIncludePool(false);
     setIncludeSolar(false);
@@ -262,7 +262,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
 
   // Reset adders to defaults on system family change
   React.useEffect(() => {
-    setIncludeFoam(true);
+    setIncludeFoam(false);
     setIncludeBooster(false);
     setIncludePool(false);
     setIncludeSolar(false);
