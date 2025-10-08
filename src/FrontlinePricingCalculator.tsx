@@ -455,6 +455,23 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid md:grid-cols-5 gap-4">
+
+                        {/* Booster */}
+            <AdderBlock
+              title="Booster Pump"
+              note={ADDER_NOTES.booster}
+              typeLabel={family}
+              enabled={includeBooster}
+              onToggle={setIncludeBooster}
+              recommendedSize={systemSizeKey}
+              activeSize={boosterActiveSize}
+              onSelectSize={setBoosterSize}
+              sizes={["S","M","L"]}
+              costBySize={adderCost.booster[family]}
+              setCostBySize={(v: any) => setAdderCost((s: any) => ({ ...s, booster: { ...s.booster, [family]: v } }))}
+              calcPrice={(k: any) => priceFromGM(adderCost.booster[family][k], adderGM)}
+            />
+            
             {/* Foam */}
             <AdderBlock
               title="Foam System"
@@ -471,21 +488,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
               calcPrice={(k: any) => priceFromGM((adderCost.foam as any)[k], adderGM)}
             />
 
-            {/* Booster */}
-            <AdderBlock
-              title="Booster Pump"
-              note={ADDER_NOTES.booster}
-              typeLabel={family}
-              enabled={includeBooster}
-              onToggle={setIncludeBooster}
-              recommendedSize={systemSizeKey}
-              activeSize={boosterActiveSize}
-              onSelectSize={setBoosterSize}
-              sizes={["S","M","L"]}
-              costBySize={adderCost.booster[family]}
-              setCostBySize={(v: any) => setAdderCost((s: any) => ({ ...s, booster: { ...s.booster, [family]: v } }))}
-              calcPrice={(k: any) => priceFromGM(adderCost.booster[family][k], adderGM)}
-            />
+
 
             {/* Pool/Draft */}
             <AdderBlock
