@@ -505,8 +505,8 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
 
          {/* Solar */}
 <Card
-  className={`p-4 relative transition-all duration-200 border ${
-    includeSolar ? "border-emerald-400 bg-emerald-50/30 shadow-sm" : "border-gray-200"
+  className={`p-4 relative transition-all duration-200 border border-gray-200 ${
+    includeSolar ? "ring-1 ring-emerald-400 bg-emerald-50/30" : ""
   }`}
 >
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
@@ -556,8 +556,8 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
 
 {/* UPS */}
 <Card
-  className={`p-4 relative transition-colors border ${
-    includeUPS ? "border-emerald-400 bg-emerald-50/30" : "border-gray-200"
+  className={`p-4 relative transition-all duration-200 border border-gray-200 ${
+    includeUPS ? "ring-1 ring-emerald-400 bg-emerald-50/30" : ""
   }`}
 >
   <div className="text-[10px] uppercase tracking-wide text-muted-foreground mb-1">
@@ -1287,11 +1287,11 @@ function AdderBlock({
   };
 
   return (
-    <Card
-      className={`p-4 relative transition-all duration-200 border ${
-        enabled ? "border-emerald-400 bg-emerald-50/30 shadow-sm" : "border-gray-200"
-      }`}
-    >
+<Card
+  className={`p-4 relative transition-all duration-200 border border-gray-200 ${
+    enabled ? "ring-1 ring-emerald-400 bg-emerald-50/30" : ""
+  }`}
+>
       <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
         Type: <span className="font-semibold">{typeLabel}</span>{" "}
         {activeSize !== recommendedSize ? (
