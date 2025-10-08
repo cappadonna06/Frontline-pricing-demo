@@ -372,7 +372,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
                   <SelectItem value="L">Large (7–9 zones)</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-muted-foreground mt-2"System type dictated by system design, LV2 for &gt;9 zone and high-flow applications. </p>
+              <p className="text-xs text-muted-foreground mt-2"System type dictated by system design, LV2 for &gt;9 zone and high-flow applications </p>
             </div>
           </CardContent>
         </Card>
