@@ -423,8 +423,9 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
       <div className="text-right">
         <Label>Base System Price (Installed)</Label>
         <div className="mt-[6px] text-3xl font-semibold tabular-nums">
-          {fmtUSD(basePrice)}
+        {fmtUSD(recalc.price)}
         </div>
+
       </div>
     </div>
 
