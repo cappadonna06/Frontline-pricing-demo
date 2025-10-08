@@ -1,19 +1,35 @@
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
+// middleware.ts — framework-agnostic Basic Auth for Vercel Edge
 
-const USER = process.env.BASIC_AUTH_USER || "";
-const PASS = process.env.BASIC_AUTH_PASS || "";
+const USER = process.env.BASIC_AUTH_USER ?? "";
+const PASS = process.env.BASIC_AUTH_PASS ?? "";
 
-export function middleware(req: NextRequest) {
-  const basicAuth = req.headers.get("authorization");
-  const url = req.nextUrl;
+// Exclude static assets and public files (tweak as needed)
+const EXCLUDE = [
+  /^\/favicon\.ico$/,
+  /^\/robots\.txt$/,
+  /^\/manifest\.json$/,
+  /^\/assets\//,         // Vite's default static asset folder
+  /^\/static\//,         // if you have one
+  /^\/.*\.(css|js|map|png|jpg|jpeg|gif|svg|webp|ico|txt)$/i,
+];
 
-  if (basicAuth) {
-    const authValue = basicAuth.split(" ")[1];
-    const [user, pwd] = atob(authValue).split(":");
+export default function middleware(req: Request): Response | void {
+  const { pathname } = new URL(req.url);
 
-    if (user === USER && pwd === PASS) {
-      return NextResponse.next();
+  // Allow excluded paths through
+  if (EXCLUDE.some((re) => re.test(pathname))) {
+    return; // let the request continue
+  }
+
+  // Require credentials for everything else
+  const auth = req.headers.get("authorization");
+  if (auth) {
+    const [scheme, encoded] = auth.split(" ");
+    if (scheme?.toLowerCase() === "basic" && encoded) {
+      const [user, pass] = atob(encoded).split(":");
+      if (user === USER && pass === PASS) {
+        return; // correct creds -> continue to app
+      }
     }
   }
 
@@ -22,7 +38,3 @@ export function middleware(req: NextRequest) {
     headers: { "WWW-Authenticate": 'Basic realm="Secure Area"' },
   });
 }
-
-export const config = {
-  matcher: ["/((?!_next/|favicon.ico|api/).*)"],
-};
