@@ -1177,6 +1177,9 @@ const applyGMPreset = (sysGM: number, addGM: number, key?: string) => {
           <p className="text-xs text-muted-foreground mt-2">Updates sync with the ASE calculation above.</p>
         </CardContent>
       </Card>
+</div>
+);
+}
 
 
 
