@@ -357,8 +357,8 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
               <Select value={family} onValueChange={(v: any) => setFamily(v)}>
                 <SelectTrigger className="mt-1"><SelectValue/></SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="MP3">MP3</SelectItem>
-                  <SelectItem value="LV2">LV2</SelectItem>
+                  <SelectItem value="MP3">Standard (MP3)</SelectItem>
+                  <SelectItem value="LV2">High-flow (LV2)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -372,7 +372,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
                   <SelectItem value="L">Large (7–9 zones)</SelectItem>
                 </SelectContent>
               </Select>
-              <p className="text-xs text-muted-foreground mt-2">LV2 is generally recommended for &gt;9 zones or higher-flow estates.</p>
+              <p className="text-xs text-muted-foreground mt-2"System type dictated by system design, LV2 for &gt;9 zone and high-flow applications. </p>
             </div>
           </CardContent>
         </Card>
@@ -1322,15 +1322,23 @@ function AdderBlock({
     enabled ? "ring-1 ring-emerald-400 bg-emerald-50/30" : ""
   }`}
 >
-      <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
-        Type: <span className="font-semibold">{typeLabel}</span>{" "}
-        {activeSize !== recommendedSize ? (
-          <span className="ml-2 text-amber-600">(Overridden)</span>
-        ) : (
-          <span className="ml-2 text-muted-foreground">(Following system)</span>
-        )}
-      </div>
+     <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
+  <div>
+    Type: <span className="font-semibold">{typeLabel}</span>
+  </div>
+  <div className="mt-0.5 italic">
+    {activeSize !== recommendedSize ? (
+      <span className="text-amber-600">(Overridden)</span>
+    ) : (
+      <span className="text-muted-foreground">(Following system)</span>
+    )}
+  </div>
+</div>
 
+
+  
+
+  
       {header}
       {sizeSelector}
 
