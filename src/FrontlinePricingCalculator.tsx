@@ -1296,9 +1296,7 @@ function AdderBlock({
         Type: <span className="font-semibold">{typeLabel}</span>{" "}
         {activeSize !== recommendedSize ? (
           <span className="ml-2 text-amber-600">(Overridden)</span>
-        ) : (
-          <span className="ml-2 text-muted-foreground">(Following system)</span>
-        )}
+        ) }
       </div>
 
       {header}
