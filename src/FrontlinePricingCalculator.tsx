@@ -396,7 +396,7 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
     }}
   />
   <p className="text-xs text-muted-foreground mt-1">
-    System cost input from cost model; does not include adders (see below).
+    System cost input from cost model; Includes material + install of core system (PoC, Manifold, Ext boxes, sprinkler system); does not include adders (see below).
   </p>
 </div>
 
