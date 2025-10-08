@@ -113,6 +113,23 @@ const [subMultiplier, setSubMultiplier] = useState<number>(1);
 
   // Adder COSTs by size (editable). These are internal costs, not prices.
 
+  // Track which GM preset (if any) is active
+const [activePreset, setActivePreset] = React.useState<string | null>(null);
+
+// Small helper for comparing floats (avoids rounding errors)
+const approxEq = (a: number, b: number, eps = 1e-3) => Math.abs(a - b) < eps;
+
+// Automatically clear or re-set activePreset when GM values change
+React.useEffect(() => {
+  const match = GM_PRESETS.find(
+    p =>
+      approxEq(targetGM, p.systemGM, 1e-3) &&
+      approxEq(adderGM, p.adderGM, 1e-3)
+  );
+  setActivePreset(match ? match.key : null);
+}, [targetGM, adderGM]);
+
+  
 const [adderCost, setAdderCost] = useState({
   // Foam (same cost for MP3/LV2; XL assumed = L * 1.2 by default)
   foam: { S: 2568, M: 2568, L: 3749, XL: Math.round(3749 * 1.20) },
@@ -134,6 +151,8 @@ const [adderCost, setAdderCost] = useState({
   solar: { flat: 511.95 },
   ups: { flat: 900 },
 });
+
+
 
   // ASE adder increments — STATE (editable via table)
   const [ASE_ADDERS, setASE_ADDERS] = useState(initialASEAdders);
@@ -223,11 +242,13 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
   // Actions
   // -----------------------------
   // Apply GM preset to BOTH system & adder GM
-  const applyGMPreset = (sysGM: number, addGM: number) => {
-    setTargetGM(sysGM);
-    setAdderGM(addGM);
-    setLastEdited("gm");
-  };
+const applyGMPreset = (sysGM: number, addGM: number, key?: string) => {
+  setTargetGM(sysGM);
+  setAdderGM(addGM);
+  setLastEdited("gm");
+  setActivePreset(key ?? null);
+};
+
 
   const resetAll = () => {
     setFamily("MP3");
@@ -337,9 +358,25 @@ const recurringAnnual = Math.round((aseAnnual + subAnnual) * 100) / 100;
         </div>
         <div className="flex gap-2">
           <div className="hidden md:flex gap-2">
-            {GM_PRESETS.map(p => (
-              <Button key={p.key} variant="secondary" size="sm" onClick={() => applyGMPreset(p.systemGM, p.adderGM)}>{p.label}</Button>
-            ))}
+{GM_PRESETS.map(p => {
+  const isActive = activePreset === p.key;
+  return (
+    <Button
+      key={p.key}
+      variant="secondary"
+      size="sm"
+      onClick={() => applyGMPreset(p.systemGM, p.adderGM, p.key)}
+      className={
+        isActive
+          ? "border-emerald-400 ring-2 ring-emerald-300 bg-emerald-50 text-emerald-900"
+          : ""
+      }
+    >
+      {p.label}
+    </Button>
+  );
+})}
+
           </div>
           <Button variant="secondary" onClick={resetAll}><RefreshCcw className="h-4 w-4 mr-2"/>Reset</Button>
         </div>
