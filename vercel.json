@@ -1,18 +1,19 @@
 {
-  "version": 2,
-  "buildCommand": "vite build",
-  "outputDirectory": "dist",
-  "functions": {
-    "auth.js": {
-      "runtime": "vercel-edge@2.8.0"
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    },
+    {
+      "src": "api/basic-auth.ts",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "routes": [
-    { "handle": "filesystem" },
     {
       "src": "/(.*)",
-      "middlewarePath": "auth",
-      "dest": "/$1"
+      "dest": "/api/basic-auth"
     }
   ]
 }
