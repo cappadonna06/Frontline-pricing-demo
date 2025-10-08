@@ -1150,6 +1150,9 @@ function SummaryRow({ label, value, bold = false }: { label: string; value: Reac
   );
 }
 
+/** ──────────────────────────────────────────────────────────────────────────
+ * AdderBlock (drop-in)
+ * --------------------------------------------------------------------------*/
 function AdderBlock({
   title,
   note,
@@ -1171,62 +1174,70 @@ function AdderBlock({
   onToggle: (v: boolean) => void;
   recommendedSize: "S" | "M" | "L";
   activeSize: "S" | "M" | "L" | "XL";
-  onSelectSize: (v: any) => void;
+  onSelectSize: (v: any) => void; // null = follow recommendation
   sizes: ("S" | "M" | "L" | "XL")[];
   costBySize: any;
   setCostBySize: (v: any) => void;
   calcPrice: (k: any) => number;
 }) {
+  // keep your existing column layout — no width changes
   const GRID = "grid grid-cols-[30px,68px,68px] gap-1"; // Size | Cost | Price
 
-const header = (
-  <div className="flex items-start justify-between mb-2">
-    <div>
-      <div className="font-medium leading-tight">{title}</div>
-      <div className="text-xs text-muted-foreground">{note}</div>
-    </div>
-    <Checkbox
-      checked={enabled}
-      onCheckedChange={onToggle}
-      aria-label={`Include ${title}`}
-      className={TOGGLE_CLASS}
-    />
-  </div>
-);
+  const header = (
+    <div className="flex items-center justify-between mb-2">
+      <div>
+        <div className="font-medium leading-tight">{title}</div>
+        <div className="text-xs text-muted-foreground">{note}</div>
+      </div>
 
+      {/* Coerce to boolean to handle Radix ‘indeterminate’ */}
+      <Checkbox
+        checked={enabled}
+        onCheckedChange={(v) => onToggle(v === true)}
+        aria-label={`Include ${title}`}
+        className={`absolute top-4 right-4 ${TOGGLE_CLASS}`}
+      />
+    </div>
+  );
 
   const sizeSelector = (
     <div>
       <div className="text-[11px] text-muted-foreground">
         Selected size <span className="font-medium">{activeSize}</span> · Recommended: {recommendedSize}
       </div>
+
       <RadioGroup
         className="mt-1 grid grid-cols-4 gap-2"
         value={String(activeSize)}
         onValueChange={(v) => onSelectSize(v as any)}
       >
-{sizes.map((s) => {
-  const isActive = String(activeSize) === String(s);
-  const activeGreen = "border-emerald-400 text-emerald-900";
-  const activeNeutral = "bg-primary/10 border-primary"; // your old highlight
-  return (
-    <label
-      key={s}
-      className={
-        "border rounded-md px-2 py-1 text-center text-xs cursor-pointer transition-colors " +
-        (isActive
-          ? (enabled ? activeGreen : activeNeutral)
-          : "hover:bg-muted border-gray-200")
-      }
-    >
-      <RadioGroupItem value={String(s)} className="sr-only" />
-      {s}
-    </label>
-  );
-})}
+        {sizes.map((s) => {
+          const isActive = String(activeSize) === String(s);
+          const pillBase =
+            "border rounded-md px-2 py-1 text-center text-xs cursor-pointer transition-colors";
+          const pillSelectedOn =
+            "bg-emerald-100 border-emerald-400 text-emerald-900";
+          const pillSelectedOff =
+            "bg-muted border-muted-foreground/30 text-foreground";
+          const pillIdle = "hover:bg-muted";
 
+          return (
+            <label
+              key={s}
+              className={`${pillBase} ${
+                isActive ? (enabled ? pillSelectedOn : pillSelectedOff) : pillIdle
+              }`}
+            >
+              <RadioGroupItem value={String(s)} className="sr-only" />
+              {s}
+            </label>
+          );
+        })}
       </RadioGroup>
-      <div className="text-[11px] text-muted-foreground mt-1">Clear override to follow recommendation.</div>
+
+      <div className="text-[11px] text-muted-foreground mt-1">
+        Clear override to follow recommendation.
+      </div>
       <div className="mt-1">
         <Button variant="ghost" size="sm" onClick={() => onSelectSize(null as any)}>
           Use recommended
@@ -1235,41 +1246,52 @@ const header = (
     </div>
   );
 
-const tableHeader = (
-  <div className={`${GRID} text-xs font-medium text-muted-foreground`}>
-    <div className="justify-self-start">Size</div>
-    <div className="justify-self-center">Cost</div>
-    <div className="justify-self-end text-right">Price</div>
-  </div>
-);
-
-const Row = ({ k }: { k: any }) => {
-  const isSelectedRow = String(activeSize) === String(k);
-  return (
-    <div
-      className={`${GRID} items-center p-2 rounded-md relative transition-all ${
-        isSelectedRow && enabled
-          ? "before:content-[''] before:absolute before:inset-y-1 before:left-0 before:w-1 before:rounded before:bg-emerald-500"
-          : ""
-      }`}
-    >
-      <div className="text-xs uppercase tracking-wide text-muted-foreground">{k}</div>
-      <Input
-        className="h-9 text-right tabular-nums"
-        type="number"
-        value={costBySize[k] ?? ""}
-        onChange={(e) => setCostBySize({ ...costBySize, [k]: Number(e.target.value || 0) })}
-      />
-      <div className="text-right text-sm font-medium tabular-nums whitespace-nowrap">
-        {fmtUSD(calcPrice(k))}
-      </div>
+  const tableHeader = (
+    <div className={`${GRID} text-xs font-medium text-muted-foreground`}>
+      <div className="justify-self-start">Size</div>
+      <div className="justify-self-center">Cost</div>
+      <div className="justify-self-end text-right">Price</div>
     </div>
   );
-};
 
+  const Row = ({ k }: { k: any }) => {
+    const isActive = String(activeSize) === String(k);
+    const highlight = enabled && isActive;
+
+    return (
+      <div
+        className={`relative ${GRID} items-center p-2 rounded-md transition-colors ${
+          highlight ? "bg-emerald-50/40" : ""
+        }`}
+      >
+        {/* left accent bar only when card enabled AND row active */}
+        {highlight && (
+          <span className="absolute left-0 top-1 bottom-1 w-1 rounded-full bg-emerald-400" />
+        )}
+
+        <div className="text-xs uppercase tracking-wide text-muted-foreground">{k}</div>
+
+        {/* fixed width input, keeps numbers tidy without changing columns */}
+        <Input
+          className="h-9 w-[120px] text-right tabular-nums"
+          type="number"
+          value={costBySize[k] ?? ""}
+          onChange={(e) => setCostBySize({ ...costBySize, [k]: Number(e.target.value || 0) })}
+        />
+
+        <div className="text-right text-sm font-medium tabular-nums whitespace-nowrap">
+          {fmtUSD(calcPrice(k))}
+        </div>
+      </div>
+    );
+  };
 
   return (
-    <Card className="p-4 space-y-2">
+    <Card
+      className={`p-4 relative transition-all duration-200 border ${
+        enabled ? "border-emerald-400 bg-emerald-50/30 shadow-sm" : "border-gray-200"
+      }`}
+    >
       <div className="text-[10px] uppercase tracking-wide text-muted-foreground">
         Type: <span className="font-semibold">{typeLabel}</span>{" "}
         {activeSize !== recommendedSize ? (
@@ -1291,3 +1313,4 @@ const Row = ({ k }: { k: any }) => {
     </Card>
   );
 }
+
